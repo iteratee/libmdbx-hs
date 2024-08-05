@@ -1,6 +1,6 @@
-.\" Copyright 2015-2021 Leonid Yuriev <leo@yuriev.ru>.
+.\" Copyright 2015-2024 Leonid Yuriev <leo@yuriev.ru>.
 .\" Copying restrictions apply.  See COPYRIGHT/LICENSE.
-.TH MDBX_CHK 1 "2021-05-09" "MDBX 0.10.0"
+.TH MDBX_CHK 1 "2024-03-21" "MDBX 0.13"
 .SH NAME
 mdbx_chk \- MDBX checking tool
 .SH SYNOPSIS
@@ -22,7 +22,7 @@ mdbx_chk \- MDBX checking tool
 [\c
 .BR \-i ]
 [\c
-.BI \-s \ subdb\fR]
+.BI \-s \ table\fR]
 .BR \ dbpath
 .SH DESCRIPTION
 The
@@ -69,8 +69,8 @@ pages.
 Ignore wrong order errors, which will likely false-positive if custom
 comparator(s) was used.
 .TP
-.BR \-s \ subdb
-Verify and show info only for a specific subdatabase.
+.BR \-s \ table
+Verify and show info only for a specific table.
 .TP
 .BR \-0 | \-1 | \-2
 Using specific meta-page 0, or 2 for checking.
@@ -80,6 +80,13 @@ Turn to a specified meta-page on successful check.
 .TP
 .BR \-T
 Turn to a specified meta-page EVEN ON UNSUCCESSFUL CHECK!
+.TP
+.BR \-u
+Warms up the DB before checking via notifying OS kernel of subsequent access to the database pages.
+.TP
+.BR \-U
+Warms up the DB before checking, notifying the OS kernel of subsequent access to the database pages,
+then forcibly loads ones by sequential access and tries to lock database pages in memory.
 .TP
 .BR \-n
 Open MDBX environment(s) which do not use subdirectories.
@@ -96,4 +103,4 @@ if no quiet mode was requested.
 .BR mdbx_load (1)
 .BR mdbx_drop (1)
 .SH AUTHOR
-Leonid Yuriev <https://github.com/erthink>
+Leonid Yuriev <https://gitflic.ru/user/erthink>
