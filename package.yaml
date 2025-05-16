@@ -28,7 +28,7 @@ dependencies:
   - base >= 4.12 && < 5
   - binary >= 0.8 && < 0.11
   - bytestring >= 0.10 && < 0.13
-  - data-default >= 0.5 && < 0.8
+  - data-default >= 0.5 && < 0.9
   - mtl >= 2.1 && < 2.4
   - store >= 0.5 && < 0.8
   - store-core >= 0.4 && < 0.5
