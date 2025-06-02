@@ -42,6 +42,7 @@ library
       Paths_libmdbx
   hs-source-dirs:
       src
+  cpp-options: "-DMDBX_BUILD_FLAGS='\"Built With GHC\"'"
   include-dirs:
       cbits/libmdbx
   install-includes:

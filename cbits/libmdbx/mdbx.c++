@@ -1,9 +1,8 @@
 /// \copyright SPDX-License-Identifier: Apache-2.0
-/// \author Леонид Юрьев aka Leonid Yuriev <leo@yuriev.ru> \date 2015-2024
+/// \author Леонид Юрьев aka Leonid Yuriev <leo@yuriev.ru> \date 2015-2025
+/* clang-format off */
 
-
-#define MDBX_BUILD_SOURCERY 40a5b5a8cb0aa52b17df5a541e416ef747538cfa71b8010c27e9010b9a079946_v0_13_0_115_g7bff3b3d
-
+#define MDBX_BUILD_SOURCERY 4df7f8f177aee7f9f94c4e72f0d732384e9a870d7d79b8142abdeb4633e710cd_v0_13_6_0_ga971c76a
 
 #define LIBMDBX_INTERNALS
 #define MDBX_DEPRECATED
@@ -12,12 +11,13 @@
 #include MDBX_CONFIG_H
 #endif
 
-
-
 /* Undefine the NDEBUG if debugging is enforced by MDBX_DEBUG */
-#if (defined(MDBX_DEBUG) && MDBX_DEBUG > 0) ||                                 \
-    (defined(MDBX_FORCE_ASSERTIONS) && MDBX_FORCE_ASSERTIONS)
+#if (defined(MDBX_DEBUG) && MDBX_DEBUG > 0) || (defined(MDBX_FORCE_ASSERTIONS) && MDBX_FORCE_ASSERTIONS)
 #undef NDEBUG
+#ifndef MDBX_DEBUG
+/* Чтобы избежать включения отладки только из-за включения assert-проверок */
+#define MDBX_DEBUG 0
+#endif
 #endif
 
 /*----------------------------------------------------------------------------*/
@@ -36,8 +36,7 @@
 #endif /* MDBX_DISABLE_GNU_SOURCE */
 
 /* Should be defined before any includes */
-#if !defined(_FILE_OFFSET_BITS) && !defined(__ANDROID_API__) &&                \
-    !defined(ANDROID)
+#if !defined(_FILE_OFFSET_BITS) && !defined(__ANDROID_API__) && !defined(ANDROID)
 #define _FILE_OFFSET_BITS 64
 #endif /* _FILE_OFFSET_BITS */
 
@@ -45,8 +44,7 @@
 #define _DARWIN_C_SOURCE
 #endif /* _DARWIN_C_SOURCE */
 
-#if (defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)) &&    \
-    !defined(__USE_MINGW_ANSI_STDIO)
+#if (defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)) && !defined(__USE_MINGW_ANSI_STDIO)
 #define __USE_MINGW_ANSI_STDIO 1
 #endif /* MinGW */
 
@@ -63,8 +61,7 @@
 #define UNICODE
 #endif /* UNICODE */
 
-#if !defined(_NO_CRT_STDIO_INLINE) && MDBX_BUILD_SHARED_LIBRARY &&             \
-    !defined(xMDBX_TOOLS) && MDBX_WITHOUT_MSVC_CRT
+#if !defined(_NO_CRT_STDIO_INLINE) && MDBX_BUILD_SHARED_LIBRARY && !defined(xMDBX_TOOLS) && MDBX_WITHOUT_MSVC_CRT
 #define _NO_CRT_STDIO_INLINE
 #endif /* _NO_CRT_STDIO_INLINE */
 
@@ -79,8 +76,7 @@
 #endif /* NOMINMAX */
 
 /* Workaround for modern libstdc++ with CLANG < 4.x */
-#if defined(__SIZEOF_INT128__) && !defined(__GLIBCXX_TYPE_INT_N_0) &&          \
-    defined(__clang__) && __clang_major__ < 4
+#if defined(__SIZEOF_INT128__) && !defined(__GLIBCXX_TYPE_INT_N_0) && defined(__clang__) && __clang_major__ < 4
 #define __GLIBCXX_BITSIZE_INT_N_0 128
 #define __GLIBCXX_TYPE_INT_N_0 __int128
 #endif /* Workaround for modern libstdc++ with CLANG < 4.x */
@@ -114,8 +110,7 @@
  *   and how to and where you can obtain the latest "Visual Studio 2015" build
  *   with all fixes.
  */
-#error                                                                         \
-    "At least \"Microsoft C/C++ Compiler\" version 19.00.24234 (Visual Studio 2015 Update 3) is required."
+#error "At least \"Microsoft C/C++ Compiler\" version 19.00.24234 (Visual Studio 2015 Update 3) is required."
 #endif
 #if _MSC_VER > 1800
 #pragma warning(disable : 4464) /* relative include path contains '..' */
@@ -124,9 +119,8 @@
 #pragma warning(disable : 5045) /* will insert Spectre mitigation... */
 #endif
 #if _MSC_VER > 1914
-#pragma warning(                                                               \
-    disable : 5105) /* winbase.h(9531): warning C5105: macro expansion         \
-                       producing 'defined' has undefined behavior */
+#pragma warning(disable : 5105) /* winbase.h(9531): warning C5105: macro expansion                                     \
+                                   producing 'defined' has undefined behavior */
 #endif
 #if _MSC_VER < 1920
 /* avoid "error C2219: syntax error: type qualifier must be after '*'" */
@@ -134,50 +128,48 @@
 #endif
 #if _MSC_VER > 1930
 #pragma warning(disable : 6235) /* <expression> is always a constant */
-#pragma warning(disable : 6237) /* <expression> is never evaluated and might   \
+#pragma warning(disable : 6237) /* <expression> is never evaluated and might                                           \
                                    have side effects */
 #endif
 #pragma warning(disable : 4710) /* 'xyz': function not inlined */
-#pragma warning(disable : 4711) /* function 'xyz' selected for automatic       \
+#pragma warning(disable : 4711) /* function 'xyz' selected for automatic                                               \
                                    inline expansion */
-#pragma warning(disable : 4201) /* nonstandard extension used: nameless        \
+#pragma warning(disable : 4201) /* nonstandard extension used: nameless                                                \
                                    struct/union */
 #pragma warning(disable : 4702) /* unreachable code */
 #pragma warning(disable : 4706) /* assignment within conditional expression */
 #pragma warning(disable : 4127) /* conditional expression is constant */
-#pragma warning(disable : 4324) /* 'xyz': structure was padded due to          \
+#pragma warning(disable : 4324) /* 'xyz': structure was padded due to                                                  \
                                    alignment specifier */
 #pragma warning(disable : 4310) /* cast truncates constant value */
-#pragma warning(disable : 4820) /* bytes padding added after data member for   \
+#pragma warning(disable : 4820) /* bytes padding added after data member for                                           \
                                    alignment */
-#pragma warning(disable : 4548) /* expression before comma has no effect;      \
+#pragma warning(disable : 4548) /* expression before comma has no effect;                                              \
                                    expected expression with side - effect */
-#pragma warning(disable : 4366) /* the result of the unary '&' operator may be \
+#pragma warning(disable : 4366) /* the result of the unary '&' operator may be                                         \
                                    unaligned */
-#pragma warning(disable : 4200) /* nonstandard extension used: zero-sized      \
+#pragma warning(disable : 4200) /* nonstandard extension used: zero-sized                                              \
                                    array in struct/union */
-#pragma warning(disable : 4204) /* nonstandard extension used: non-constant    \
+#pragma warning(disable : 4204) /* nonstandard extension used: non-constant                                            \
                                    aggregate initializer */
-#pragma warning(                                                               \
-    disable : 4505) /* unreferenced local function has been removed */
-#endif              /* _MSC_VER (warnings) */
+#pragma warning(disable : 4505) /* unreferenced local function has been removed */
+#endif                          /* _MSC_VER (warnings) */
 
 #if defined(__GNUC__) && __GNUC__ < 9
 #pragma GCC diagnostic ignored "-Wattributes"
 #endif /* GCC < 9 */
-
 
 /*----------------------------------------------------------------------------*/
 /* Microsoft compiler generates a lot of warning for self includes... */
 
 #ifdef _MSC_VER
 #pragma warning(push, 1)
-#pragma warning(disable : 4548) /* expression before comma has no effect;      \
+#pragma warning(disable : 4548) /* expression before comma has no effect;                                              \
                                    expected expression with side - effect */
-#pragma warning(disable : 4530) /* C++ exception handler used, but unwind      \
+#pragma warning(disable : 4530) /* C++ exception handler used, but unwind                                              \
                                  * semantics are not enabled. Specify /EHsc */
-#pragma warning(disable : 4577) /* 'noexcept' used with no exception handling  \
-                                 * mode specified; termination on exception is \
+#pragma warning(disable : 4577) /* 'noexcept' used with no exception handling                                          \
+                                 * mode specified; termination on exception is                                         \
                                  * not guaranteed. Specify /EHsc */
 #endif                          /* _MSC_VER (warnings) */
 
@@ -238,8 +230,7 @@
 
 #ifndef __GNUC_PREREQ
 #if defined(__GNUC__) && defined(__GNUC_MINOR__)
-#define __GNUC_PREREQ(maj, min)                                                \
-  ((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+#define __GNUC_PREREQ(maj, min) ((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
 #else
 #define __GNUC_PREREQ(maj, min) (0)
 #endif
@@ -247,8 +238,7 @@
 
 #ifndef __CLANG_PREREQ
 #ifdef __clang__
-#define __CLANG_PREREQ(maj, min)                                               \
-  ((__clang_major__ << 16) + __clang_minor__ >= ((maj) << 16) + (min))
+#define __CLANG_PREREQ(maj, min) ((__clang_major__ << 16) + __clang_minor__ >= ((maj) << 16) + (min))
 #else
 #define __CLANG_PREREQ(maj, min) (0)
 #endif
@@ -256,8 +246,7 @@
 
 #ifndef __GLIBC_PREREQ
 #if defined(__GLIBC__) && defined(__GLIBC_MINOR__)
-#define __GLIBC_PREREQ(maj, min)                                               \
-  ((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
+#define __GLIBC_PREREQ(maj, min) ((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
 #else
 #define __GLIBC_PREREQ(maj, min) (0)
 #endif
@@ -267,8 +256,7 @@
 /* pre-requirements */
 
 #if (-6 & 5) || CHAR_BIT != 8 || UINT_MAX < 0xffffffff || ULONG_MAX % 0xFFFF
-#error                                                                         \
-    "Sanity checking failed: Two's complement, reasonably sized integer types"
+#error "Sanity checking failed: Two's complement, reasonably sized integer types"
 #endif
 
 #ifndef SSIZE_MAX
@@ -300,8 +288,7 @@
 #endif
 
 #ifdef __SANITIZE_THREAD__
-#warning                                                                       \
-    "libmdbx don't compatible with ThreadSanitizer, you will get a lot of false-positive issues."
+#warning "libmdbx don't compatible with ThreadSanitizer, you will get a lot of false-positive issues."
 #endif /* __SANITIZE_THREAD__ */
 
 /*----------------------------------------------------------------------------*/
@@ -333,8 +320,7 @@
 #endif
 #endif /* __extern_C */
 
-#if !defined(nullptr) && !defined(__cplusplus) ||                              \
-    (__cplusplus < 201103L && !defined(_MSC_VER))
+#if !defined(nullptr) && !defined(__cplusplus) || (__cplusplus < 201103L && !defined(_MSC_VER))
 #define nullptr NULL
 #endif
 
@@ -346,9 +332,8 @@
 #endif
 #endif /* Apple OSX & iOS */
 
-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) ||     \
-    defined(__BSD__) || defined(__bsdi__) || defined(__DragonFly__) ||         \
-    defined(__APPLE__) || defined(__MACH__)
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__BSD__) || defined(__bsdi__) ||    \
+    defined(__DragonFly__) || defined(__APPLE__) || defined(__MACH__)
 #include <sys/cdefs.h>
 #include <sys/mount.h>
 #include <sys/sysctl.h>
@@ -365,8 +350,7 @@
 #endif
 #else
 #include <malloc.h>
-#if !(defined(__sun) || defined(__SVR4) || defined(__svr4__) ||                \
-      defined(_WIN32) || defined(_WIN64))
+#if !(defined(__sun) || defined(__SVR4) || defined(__svr4__) || defined(_WIN32) || defined(_WIN64))
 #include <mntent.h>
 #endif /* !Solaris */
 #endif /* !xBSD */
@@ -475,43 +459,38 @@ __extern_C key_t ftok(const char *, int);
 /*----------------------------------------------------------------------------*/
 /* Byteorder */
 
-#if defined(i386) || defined(__386) || defined(__i386) || defined(__i386__) || \
-    defined(i486) || defined(__i486) || defined(__i486__) || defined(i586) ||  \
-    defined(__i586) || defined(__i586__) || defined(i686) ||                   \
-    defined(__i686) || defined(__i686__) || defined(_M_IX86) ||                \
-    defined(_X86_) || defined(__THW_INTEL__) || defined(__I86__) ||            \
-    defined(__INTEL__) || defined(__x86_64) || defined(__x86_64__) ||          \
-    defined(__amd64__) || defined(__amd64) || defined(_M_X64) ||               \
-    defined(_M_AMD64) || defined(__IA32__) || defined(__INTEL__)
+#if defined(i386) || defined(__386) || defined(__i386) || defined(__i386__) || defined(i486) || defined(__i486) ||     \
+    defined(__i486__) || defined(i586) || defined(__i586) || defined(__i586__) || defined(i686) || defined(__i686) ||  \
+    defined(__i686__) || defined(_M_IX86) || defined(_X86_) || defined(__THW_INTEL__) || defined(__I86__) ||           \
+    defined(__INTEL__) || defined(__x86_64) || defined(__x86_64__) || defined(__amd64__) || defined(__amd64) ||        \
+    defined(_M_X64) || defined(_M_AMD64) || defined(__IA32__) || defined(__INTEL__)
 #ifndef __ia32__
 /* LY: define neutral __ia32__ for x86 and x86-64 */
 #define __ia32__ 1
 #endif /* __ia32__ */
-#if !defined(__amd64__) &&                                                     \
-    (defined(__x86_64) || defined(__x86_64__) || defined(__amd64) ||           \
-     defined(_M_X64) || defined(_M_AMD64))
+#if !defined(__amd64__) &&                                                                                             \
+    (defined(__x86_64) || defined(__x86_64__) || defined(__amd64) || defined(_M_X64) || defined(_M_AMD64))
 /* LY: define trusty __amd64__ for all AMD64/x86-64 arch */
 #define __amd64__ 1
 #endif /* __amd64__ */
 #endif /* all x86 */
 
-#if !defined(__BYTE_ORDER__) || !defined(__ORDER_LITTLE_ENDIAN__) ||           \
-    !defined(__ORDER_BIG_ENDIAN__)
+#if !defined(__BYTE_ORDER__) || !defined(__ORDER_LITTLE_ENDIAN__) || !defined(__ORDER_BIG_ENDIAN__)
 
-#if defined(__GLIBC__) || defined(__GNU_LIBRARY__) ||                          \
-    defined(__ANDROID_API__) || defined(HAVE_ENDIAN_H) || __has_include(<endian.h>)
+#if defined(__GLIBC__) || defined(__GNU_LIBRARY__) || defined(__ANDROID_API__) || defined(HAVE_ENDIAN_H) ||            \
+    __has_include(<endian.h>)
 #include <endian.h>
-#elif defined(__APPLE__) || defined(__MACH__) || defined(__OpenBSD__) ||       \
-    defined(HAVE_MACHINE_ENDIAN_H) || __has_include(<machine/endian.h>)
+#elif defined(__APPLE__) || defined(__MACH__) || defined(__OpenBSD__) || defined(HAVE_MACHINE_ENDIAN_H) ||             \
+    __has_include(<machine/endian.h>)
 #include <machine/endian.h>
 #elif defined(HAVE_SYS_ISA_DEFS_H) || __has_include(<sys/isa_defs.h>)
 #include <sys/isa_defs.h>
-#elif (defined(HAVE_SYS_TYPES_H) && defined(HAVE_SYS_ENDIAN_H)) ||             \
+#elif (defined(HAVE_SYS_TYPES_H) && defined(HAVE_SYS_ENDIAN_H)) ||                                                     \
     (__has_include(<sys/types.h>) && __has_include(<sys/endian.h>))
 #include <sys/endian.h>
 #include <sys/types.h>
-#elif defined(__bsdi__) || defined(__DragonFly__) || defined(__FreeBSD__) ||   \
-    defined(__NetBSD__) || defined(HAVE_SYS_PARAM_H) || __has_include(<sys/param.h>)
+#elif defined(__bsdi__) || defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) ||                    \
+    defined(HAVE_SYS_PARAM_H) || __has_include(<sys/param.h>)
 #include <sys/param.h>
 #endif /* OS */
 
@@ -527,27 +506,19 @@ __extern_C key_t ftok(const char *, int);
 #define __ORDER_LITTLE_ENDIAN__ 1234
 #define __ORDER_BIG_ENDIAN__ 4321
 
-#if defined(__LITTLE_ENDIAN__) ||                                              \
-    (defined(_LITTLE_ENDIAN) && !defined(_BIG_ENDIAN)) ||                      \
-    defined(__ARMEL__) || defined(__THUMBEL__) || defined(__AARCH64EL__) ||    \
-    defined(__MIPSEL__) || defined(_MIPSEL) || defined(__MIPSEL) ||            \
-    defined(_M_ARM) || defined(_M_ARM64) || defined(__e2k__) ||                \
-    defined(__elbrus_4c__) || defined(__elbrus_8c__) || defined(__bfin__) ||   \
-    defined(__BFIN__) || defined(__ia64__) || defined(_IA64) ||                \
-    defined(__IA64__) || defined(__ia64) || defined(_M_IA64) ||                \
-    defined(__itanium__) || defined(__ia32__) || defined(__CYGWIN__) ||        \
-    defined(_WIN64) || defined(_WIN32) || defined(__TOS_WIN__) ||              \
-    defined(__WINDOWS__)
+#if defined(__LITTLE_ENDIAN__) || (defined(_LITTLE_ENDIAN) && !defined(_BIG_ENDIAN)) || defined(__ARMEL__) ||          \
+    defined(__THUMBEL__) || defined(__AARCH64EL__) || defined(__MIPSEL__) || defined(_MIPSEL) || defined(__MIPSEL) ||  \
+    defined(_M_ARM) || defined(_M_ARM64) || defined(__e2k__) || defined(__elbrus_4c__) || defined(__elbrus_8c__) ||    \
+    defined(__bfin__) || defined(__BFIN__) || defined(__ia64__) || defined(_IA64) || defined(__IA64__) ||              \
+    defined(__ia64) || defined(_M_IA64) || defined(__itanium__) || defined(__ia32__) || defined(__CYGWIN__) ||         \
+    defined(_WIN64) || defined(_WIN32) || defined(__TOS_WIN__) || defined(__WINDOWS__)
 #define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
 
-#elif defined(__BIG_ENDIAN__) ||                                               \
-    (defined(_BIG_ENDIAN) && !defined(_LITTLE_ENDIAN)) ||                      \
-    defined(__ARMEB__) || defined(__THUMBEB__) || defined(__AARCH64EB__) ||    \
-    defined(__MIPSEB__) || defined(_MIPSEB) || defined(__MIPSEB) ||            \
-    defined(__m68k__) || defined(M68000) || defined(__hppa__) ||               \
-    defined(__hppa) || defined(__HPPA__) || defined(__sparc__) ||              \
-    defined(__sparc) || defined(__370__) || defined(__THW_370__) ||            \
-    defined(__s390__) || defined(__s390x__) || defined(__SYSC_ZARCH__)
+#elif defined(__BIG_ENDIAN__) || (defined(_BIG_ENDIAN) && !defined(_LITTLE_ENDIAN)) || defined(__ARMEB__) ||           \
+    defined(__THUMBEB__) || defined(__AARCH64EB__) || defined(__MIPSEB__) || defined(_MIPSEB) || defined(__MIPSEB) ||  \
+    defined(__m68k__) || defined(M68000) || defined(__hppa__) || defined(__hppa) || defined(__HPPA__) ||               \
+    defined(__sparc__) || defined(__sparc) || defined(__370__) || defined(__THW_370__) || defined(__s390__) ||         \
+    defined(__s390x__) || defined(__SYSC_ZARCH__)
 #define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
 
 #else
@@ -567,17 +538,14 @@ __extern_C key_t ftok(const char *, int);
 #define MDBX_HAVE_CMOV 1
 #elif defined(__thumb__) || defined(__thumb) || defined(__TARGET_ARCH_THUMB)
 #define MDBX_HAVE_CMOV 0
-#elif defined(_M_ARM) || defined(_M_ARM64) || defined(__aarch64__) ||          \
-    defined(__aarch64) || defined(__arm__) || defined(__arm) ||                \
-    defined(__CC_ARM)
+#elif defined(_M_ARM) || defined(_M_ARM64) || defined(__aarch64__) || defined(__aarch64) || defined(__arm__) ||        \
+    defined(__arm) || defined(__CC_ARM)
 #define MDBX_HAVE_CMOV 1
-#elif (defined(__riscv__) || defined(__riscv64)) &&                            \
-    (defined(__riscv_b) || defined(__riscv_bitmanip))
+#elif (defined(__riscv__) || defined(__riscv64)) && (defined(__riscv_b) || defined(__riscv_bitmanip))
 #define MDBX_HAVE_CMOV 1
-#elif defined(i686) || defined(__i686) || defined(__i686__) ||                 \
-    (defined(_M_IX86) && _M_IX86 > 600) || defined(__x86_64) ||                \
-    defined(__x86_64__) || defined(__amd64__) || defined(__amd64) ||           \
-    defined(_M_X64) || defined(_M_AMD64)
+#elif defined(i686) || defined(__i686) || defined(__i686__) || (defined(_M_IX86) && _M_IX86 > 600) ||                  \
+    defined(__x86_64) || defined(__x86_64__) || defined(__amd64__) || defined(__amd64) || defined(_M_X64) ||           \
+    defined(_M_AMD64)
 #define MDBX_HAVE_CMOV 1
 #else
 #define MDBX_HAVE_CMOV 0
@@ -603,8 +571,7 @@ __extern_C key_t ftok(const char *, int);
 #endif
 #elif defined(__SUNPRO_C) || defined(__sun) || defined(sun)
 #include <mbarrier.h>
-#elif (defined(_HPUX_SOURCE) || defined(__hpux) || defined(__HP_aCC)) &&       \
-    (defined(HP_IA64) || defined(__ia64))
+#elif (defined(_HPUX_SOURCE) || defined(__hpux) || defined(__HP_aCC)) && (defined(HP_IA64) || defined(__ia64))
 #include <machine/sys/inline.h>
 #elif defined(__IBMC__) && defined(__powerpc)
 #include <atomic.h>
@@ -626,29 +593,26 @@ __extern_C key_t ftok(const char *, int);
 #endif /* Compiler */
 
 #if !defined(__noop) && !defined(_MSC_VER)
-#define __noop                                                                 \
-  do {                                                                         \
+#define __noop                                                                                                         \
+  do {                                                                                                                 \
   } while (0)
 #endif /* __noop */
 
-#if defined(__fallthrough) &&                                                  \
-    (defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__))
+#if defined(__fallthrough) && (defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__))
 #undef __fallthrough
 #endif /* __fallthrough workaround for MinGW */
 
 #ifndef __fallthrough
-#if defined(__cplusplus) && (__has_cpp_attribute(fallthrough) &&               \
-                             (!defined(__clang__) || __clang__ > 4)) ||        \
+#if defined(__cplusplus) && (__has_cpp_attribute(fallthrough) && (!defined(__clang__) || __clang__ > 4)) ||            \
     __cplusplus >= 201703L
 #define __fallthrough [[fallthrough]]
 #elif __GNUC_PREREQ(8, 0) && defined(__cplusplus) && __cplusplus >= 201103L
 #define __fallthrough [[fallthrough]]
-#elif __GNUC_PREREQ(7, 0) &&                                                   \
-    (!defined(__LCC__) || (__LCC__ == 124 && __LCC_MINOR__ >= 12) ||           \
-     (__LCC__ == 125 && __LCC_MINOR__ >= 5) || (__LCC__ >= 126))
+#elif __GNUC_PREREQ(7, 0) && (!defined(__LCC__) || (__LCC__ == 124 && __LCC_MINOR__ >= 12) ||                          \
+                              (__LCC__ == 125 && __LCC_MINOR__ >= 5) || (__LCC__ >= 126))
 #define __fallthrough __attribute__((__fallthrough__))
-#elif defined(__clang__) && defined(__cplusplus) && __cplusplus >= 201103L &&  \
-    __has_feature(cxx_attributes) && __has_warning("-Wimplicit-fallthrough")
+#elif defined(__clang__) && defined(__cplusplus) && __cplusplus >= 201103L && __has_feature(cxx_attributes) &&         \
+    __has_warning("-Wimplicit-fallthrough")
 #define __fallthrough [[clang::fallthrough]]
 #else
 #define __fallthrough
@@ -661,8 +625,8 @@ __extern_C key_t ftok(const char *, int);
 #elif defined(_MSC_VER)
 #define __unreachable() __assume(0)
 #else
-#define __unreachable()                                                        \
-  do {                                                                         \
+#define __unreachable()                                                                                                \
+  do {                                                                                                                 \
   } while (1)
 #endif
 #endif /* __unreachable */
@@ -671,9 +635,9 @@ __extern_C key_t ftok(const char *, int);
 #if defined(__GNUC__) || defined(__clang__) || __has_builtin(__builtin_prefetch)
 #define __prefetch(ptr) __builtin_prefetch(ptr)
 #else
-#define __prefetch(ptr)                                                        \
-  do {                                                                         \
-    (void)(ptr);                                                               \
+#define __prefetch(ptr)                                                                                                \
+  do {                                                                                                                 \
+    (void)(ptr);                                                                                                       \
   } while (0)
 #endif
 #endif /* __prefetch */
@@ -683,8 +647,7 @@ __extern_C key_t ftok(const char *, int);
 #endif /* offsetof */
 
 #ifndef container_of
-#define container_of(ptr, type, member)                                        \
-  ((type *)((char *)(ptr) - offsetof(type, member)))
+#define container_of(ptr, type, member) ((type *)((char *)(ptr) - offsetof(type, member)))
 #endif /* container_of */
 
 /*----------------------------------------------------------------------------*/
@@ -756,8 +719,7 @@ __extern_C key_t ftok(const char *, int);
 
 #ifndef __hot
 #if defined(__OPTIMIZE__)
-#if defined(__clang__) && !__has_attribute(__hot__) &&                         \
-    __has_attribute(__section__) &&                                            \
+#if defined(__clang__) && !__has_attribute(__hot__) && __has_attribute(__section__) &&                                 \
     (defined(__linux__) || defined(__gnu_linux__))
 /* just put frequently used functions in separate section */
 #define __hot __attribute__((__section__("text.hot"))) __optimize("O3")
@@ -773,8 +735,7 @@ __extern_C key_t ftok(const char *, int);
 
 #ifndef __cold
 #if defined(__OPTIMIZE__)
-#if defined(__clang__) && !__has_attribute(__cold__) &&                        \
-    __has_attribute(__section__) &&                                            \
+#if defined(__clang__) && !__has_attribute(__cold__) && __has_attribute(__section__) &&                                \
     (defined(__linux__) || defined(__gnu_linux__))
 /* just put infrequently used functions in separate section */
 #define __cold __attribute__((__section__("text.unlikely"))) __optimize("Os")
@@ -797,8 +758,7 @@ __extern_C key_t ftok(const char *, int);
 #endif /* __flatten */
 
 #ifndef likely
-#if (defined(__GNUC__) || __has_builtin(__builtin_expect)) &&                  \
-    !defined(__COVERITY__)
+#if (defined(__GNUC__) || __has_builtin(__builtin_expect)) && !defined(__COVERITY__)
 #define likely(cond) __builtin_expect(!!(cond), 1)
 #else
 #define likely(x) (!!(x))
@@ -806,8 +766,7 @@ __extern_C key_t ftok(const char *, int);
 #endif /* likely */
 
 #ifndef unlikely
-#if (defined(__GNUC__) || __has_builtin(__builtin_expect)) &&                  \
-    !defined(__COVERITY__)
+#if (defined(__GNUC__) || __has_builtin(__builtin_expect)) && !defined(__COVERITY__)
 #define unlikely(cond) __builtin_expect(!!(cond), 0)
 #else
 #define unlikely(x) (!!(x))
@@ -827,8 +786,7 @@ __extern_C key_t ftok(const char *, int);
 #define MDBX_WEAK_IMPORT_ATTRIBUTE WEAK_IMPORT_ATTRIBUTE
 #elif __has_attribute(__weak__) && __has_attribute(__weak_import__)
 #define MDBX_WEAK_IMPORT_ATTRIBUTE __attribute__((__weak__, __weak_import__))
-#elif __has_attribute(__weak__) ||                                             \
-    (defined(__GNUC__) && __GNUC__ >= 4 && defined(__ELF__))
+#elif __has_attribute(__weak__) || (defined(__GNUC__) && __GNUC__ >= 4 && defined(__ELF__))
 #define MDBX_WEAK_IMPORT_ATTRIBUTE __attribute__((__weak__))
 #else
 #define MDBX_WEAK_IMPORT_ATTRIBUTE
@@ -841,9 +799,7 @@ __extern_C key_t ftok(const char *, int);
 
 #ifndef MDBX_EXCLUDE_FOR_GPROF
 #ifdef ENABLE_GPROF
-#define MDBX_EXCLUDE_FOR_GPROF                                                 \
-  __attribute__((__no_instrument_function__,                                   \
-                 __no_profile_instrument_function__))
+#define MDBX_EXCLUDE_FOR_GPROF __attribute__((__no_instrument_function__, __no_profile_instrument_function__))
 #else
 #define MDBX_EXCLUDE_FOR_GPROF
 #endif /* ENABLE_GPROF */
@@ -852,10 +808,9 @@ __extern_C key_t ftok(const char *, int);
 /*----------------------------------------------------------------------------*/
 
 #ifndef expect_with_probability
-#if defined(__builtin_expect_with_probability) ||                              \
-    __has_builtin(__builtin_expect_with_probability) || __GNUC_PREREQ(9, 0)
-#define expect_with_probability(expr, value, prob)                             \
-  __builtin_expect_with_probability(expr, value, prob)
+#if defined(__builtin_expect_with_probability) || __has_builtin(__builtin_expect_with_probability) ||                  \
+    __GNUC_PREREQ(9, 0)
+#define expect_with_probability(expr, value, prob) __builtin_expect_with_probability(expr, value, prob)
 #else
 #define expect_with_probability(expr, value, prob) (expr)
 #endif
@@ -872,11 +827,9 @@ __extern_C key_t ftok(const char *, int);
 #if MDBX_GOOFY_MSVC_STATIC_ANALYZER || (defined(_MSC_VER) && _MSC_VER > 1919)
 #define MDBX_ANALYSIS_ASSUME(expr) __analysis_assume(expr)
 #ifdef _PREFAST_
-#define MDBX_SUPPRESS_GOOFY_MSVC_ANALYZER(warn_id)                             \
-  __pragma(prefast(suppress : warn_id))
+#define MDBX_SUPPRESS_GOOFY_MSVC_ANALYZER(warn_id) __pragma(prefast(suppress : warn_id))
 #else
-#define MDBX_SUPPRESS_GOOFY_MSVC_ANALYZER(warn_id)                             \
-  __pragma(warning(suppress : warn_id))
+#define MDBX_SUPPRESS_GOOFY_MSVC_ANALYZER(warn_id) __pragma(warning(suppress : warn_id))
 #endif
 #else
 #define MDBX_ANALYSIS_ASSUME(expr) assert(expr)
@@ -884,8 +837,7 @@ __extern_C key_t ftok(const char *, int);
 #endif /* MDBX_GOOFY_MSVC_STATIC_ANALYZER */
 
 #ifndef FLEXIBLE_ARRAY_MEMBERS
-#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) ||              \
-    (!defined(__cplusplus) && defined(_MSC_VER))
+#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || (!defined(__cplusplus) && defined(_MSC_VER))
 #define FLEXIBLE_ARRAY_MEMBERS 1
 #else
 #define FLEXIBLE_ARRAY_MEMBERS 0
@@ -944,8 +896,7 @@ template <typename T, size_t N> char (&__ArraySizeHelper(T (&array)[N]))[N];
 #define CONCAT(a, b) a##b
 #define XCONCAT(a, b) CONCAT(a, b)
 
-#define MDBX_TETRAD(a, b, c, d)                                                \
-  ((uint32_t)(a) << 24 | (uint32_t)(b) << 16 | (uint32_t)(c) << 8 | (d))
+#define MDBX_TETRAD(a, b, c, d) ((uint32_t)(a) << 24 | (uint32_t)(b) << 16 | (uint32_t)(c) << 8 | (d))
 
 #define MDBX_STRING_TETRAD(str) MDBX_TETRAD(str[0], str[1], str[2], str[3])
 
@@ -959,14 +910,13 @@ template <typename T, size_t N> char (&__ArraySizeHelper(T (&array)[N]))[N];
 #elif defined(_MSC_VER)
 #include <crtdbg.h>
 #define STATIC_ASSERT_MSG(expr, msg) _STATIC_ASSERT(expr)
-#elif (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) ||            \
-    __has_feature(c_static_assert)
+#elif (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) || __has_feature(c_static_assert)
 #define STATIC_ASSERT_MSG(expr, msg) _Static_assert(expr, msg)
 #else
-#define STATIC_ASSERT_MSG(expr, msg)                                           \
-  switch (0) {                                                                 \
-  case 0:                                                                      \
-  case (expr):;                                                                \
+#define STATIC_ASSERT_MSG(expr, msg)                                                                                   \
+  switch (0) {                                                                                                         \
+  case 0:                                                                                                              \
+  case (expr):;                                                                                                        \
   }
 #endif
 #endif /* STATIC_ASSERT */
@@ -1058,16 +1008,13 @@ template <typename T, size_t N> char (&__ArraySizeHelper(T (&array)[N]))[N];
 typedef struct iov_ctx iov_ctx_t;
 ///
 
-
-
 /*----------------------------------------------------------------------------*/
 /* Memory/Compiler barriers, cache coherence */
 
 #if __has_include(<sys/cachectl.h>)
 #include <sys/cachectl.h>
-#elif defined(__mips) || defined(__mips__) || defined(__mips64) ||             \
-    defined(__mips64__) || defined(_M_MRX000) || defined(_MIPS_) ||            \
-    defined(__MWERKS__) || defined(__sgi)
+#elif defined(__mips) || defined(__mips__) || defined(__mips64) || defined(__mips64__) || defined(_M_MRX000) ||        \
+    defined(_MIPS_) || defined(__MWERKS__) || defined(__sgi)
 /* MIPS should have explicit cache control */
 #include <sys/cachectl.h>
 #endif
@@ -1081,11 +1028,9 @@ MDBX_MAYBE_UNUSED static inline void osal_compiler_barrier(void) {
   __memory_barrier();
 #elif defined(__SUNPRO_C) || defined(__sun) || defined(sun)
   __compiler_barrier();
-#elif (defined(_HPUX_SOURCE) || defined(__hpux) || defined(__HP_aCC)) &&       \
-    (defined(HP_IA64) || defined(__ia64))
+#elif (defined(_HPUX_SOURCE) || defined(__hpux) || defined(__HP_aCC)) && (defined(HP_IA64) || defined(__ia64))
   _Asm_sched_fence(/* LY: no-arg meaning 'all expect ALU', e.g. 0x3D3D */);
-#elif defined(_AIX) || defined(__ppc__) || defined(__powerpc__) ||             \
-    defined(__ppc64__) || defined(__powerpc64__)
+#elif defined(_AIX) || defined(__ppc__) || defined(__powerpc__) || defined(__ppc64__) || defined(__powerpc64__)
   __fence();
 #else
 #error "Could not guess the kind of compiler, please report to us."
@@ -1113,11 +1058,9 @@ MDBX_MAYBE_UNUSED static inline void osal_memory_barrier(void) {
 #endif
 #elif defined(__SUNPRO_C) || defined(__sun) || defined(sun)
   __machine_rw_barrier();
-#elif (defined(_HPUX_SOURCE) || defined(__hpux) || defined(__HP_aCC)) &&       \
-    (defined(HP_IA64) || defined(__ia64))
+#elif (defined(_HPUX_SOURCE) || defined(__hpux) || defined(__HP_aCC)) && (defined(HP_IA64) || defined(__ia64))
   _Asm_mf();
-#elif defined(_AIX) || defined(__ppc__) || defined(__powerpc__) ||             \
-    defined(__ppc64__) || defined(__powerpc64__)
+#elif defined(_AIX) || defined(__ppc__) || defined(__powerpc__) || defined(__ppc64__) || defined(__powerpc64__)
   __lwsync();
 #else
 #error "Could not guess the kind of compiler, please report to us."
@@ -1150,9 +1093,7 @@ typedef CRITICAL_SECTION osal_fastmutex_t;
 #if MDBX_WITHOUT_MSVC_CRT
 
 #ifndef osal_malloc
-static inline void *osal_malloc(size_t bytes) {
-  return HeapAlloc(GetProcessHeap(), 0, bytes);
-}
+static inline void *osal_malloc(size_t bytes) { return HeapAlloc(GetProcessHeap(), 0, bytes); }
 #endif /* osal_malloc */
 
 #ifndef osal_calloc
@@ -1163,8 +1104,7 @@ static inline void *osal_calloc(size_t nelem, size_t size) {
 
 #ifndef osal_realloc
 static inline void *osal_realloc(void *ptr, size_t bytes) {
-  return ptr ? HeapReAlloc(GetProcessHeap(), 0, ptr, bytes)
-             : HeapAlloc(GetProcessHeap(), 0, bytes);
+  return ptr ? HeapReAlloc(GetProcessHeap(), 0, ptr, bytes) : HeapAlloc(GetProcessHeap(), 0, bytes);
 }
 #endif /* osal_realloc */
 
@@ -1210,12 +1150,12 @@ typedef pthread_mutex_t osal_fastmutex_t;
 #endif /* Platform */
 
 #if __GLIBC_PREREQ(2, 12) || defined(__FreeBSD__) || defined(malloc_usable_size)
-/* malloc_usable_size() already provided */
+#define osal_malloc_usable_size(ptr) malloc_usable_size(ptr)
 #elif defined(__APPLE__)
-#define malloc_usable_size(ptr) malloc_size(ptr)
+#define osal_malloc_usable_size(ptr) malloc_size(ptr)
 #elif defined(_MSC_VER) && !MDBX_WITHOUT_MSVC_CRT
-#define malloc_usable_size(ptr) _msize(ptr)
-#endif /* malloc_usable_size */
+#define osal_malloc_usable_size(ptr) _msize(ptr)
+#endif /* osal_malloc_usable_size */
 
 /*----------------------------------------------------------------------------*/
 /* OS abstraction layer stuff */
@@ -1257,7 +1197,7 @@ typedef struct osal_mmap {
 
 #elif defined(__APPLE__) || defined(__MACH__) || defined(_DARWIN_C_SOURCE)
 
-#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && defined(MAC_OS_VERSION_11_0) &&  \
+#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && defined(MAC_OS_VERSION_11_0) &&                                          \
     MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
 /* FIXME: add checks for IOS versions, etc */
 #define MDBX_HAVE_PWRITEV 1
@@ -1328,39 +1268,29 @@ typedef struct osal_ioring {
 MDBX_INTERNAL int osal_ioring_create(osal_ioring_t *
 #if defined(_WIN32) || defined(_WIN64)
                                      ,
-                                     bool enable_direct,
-                                     mdbx_filehandle_t overlapped_fd
+                                     bool enable_direct, mdbx_filehandle_t overlapped_fd
 #endif /* Windows */
 );
 MDBX_INTERNAL int osal_ioring_resize(osal_ioring_t *, size_t items);
 MDBX_INTERNAL void osal_ioring_destroy(osal_ioring_t *);
 MDBX_INTERNAL void osal_ioring_reset(osal_ioring_t *);
-MDBX_INTERNAL int osal_ioring_add(osal_ioring_t *ctx, const size_t offset,
-                                  void *data, const size_t bytes);
+MDBX_INTERNAL int osal_ioring_add(osal_ioring_t *ctx, const size_t offset, void *data, const size_t bytes);
 typedef struct osal_ioring_write_result {
   int err;
   unsigned wops;
 } osal_ioring_write_result_t;
-MDBX_INTERNAL osal_ioring_write_result_t
-osal_ioring_write(osal_ioring_t *ior, mdbx_filehandle_t fd);
+MDBX_INTERNAL osal_ioring_write_result_t osal_ioring_write(osal_ioring_t *ior, mdbx_filehandle_t fd);
 
 MDBX_INTERNAL void osal_ioring_walk(osal_ioring_t *ior, iov_ctx_t *ctx,
-                                    void (*callback)(iov_ctx_t *ctx,
-                                                     size_t offset, void *data,
-                                                     size_t bytes));
+                                    void (*callback)(iov_ctx_t *ctx, size_t offset, void *data, size_t bytes));
 
-MDBX_MAYBE_UNUSED static inline unsigned
-osal_ioring_left(const osal_ioring_t *ior) {
-  return ior->slots_left;
-}
+MDBX_MAYBE_UNUSED static inline unsigned osal_ioring_left(const osal_ioring_t *ior) { return ior->slots_left; }
 
-MDBX_MAYBE_UNUSED static inline unsigned
-osal_ioring_used(const osal_ioring_t *ior) {
+MDBX_MAYBE_UNUSED static inline unsigned osal_ioring_used(const osal_ioring_t *ior) {
   return ior->allocated - ior->slots_left;
 }
 
-MDBX_MAYBE_UNUSED static inline int
-osal_ioring_prepare(osal_ioring_t *ior, size_t items, size_t bytes) {
+MDBX_MAYBE_UNUSED static inline int osal_ioring_prepare(osal_ioring_t *ior, size_t items, size_t bytes) {
   items = (items > 32) ? items : 32;
 #if defined(_WIN32) || defined(_WIN64)
   if (ior->direct) {
@@ -1379,13 +1309,11 @@ osal_ioring_prepare(osal_ioring_t *ior, size_t items, size_t bytes) {
 /*----------------------------------------------------------------------------*/
 /* libc compatibility stuff */
 
-#if (!defined(__GLIBC__) && __GLIBC_PREREQ(2, 1)) &&                           \
-    (defined(_GNU_SOURCE) || defined(_BSD_SOURCE))
+#if (!defined(__GLIBC__) && __GLIBC_PREREQ(2, 1)) && (defined(_GNU_SOURCE) || defined(_BSD_SOURCE))
 #define osal_asprintf asprintf
 #define osal_vasprintf vasprintf
 #else
-MDBX_MAYBE_UNUSED MDBX_INTERNAL
-    MDBX_PRINTF_ARGS(2, 3) int osal_asprintf(char **strp, const char *fmt, ...);
+MDBX_MAYBE_UNUSED MDBX_INTERNAL MDBX_PRINTF_ARGS(2, 3) int osal_asprintf(char **strp, const char *fmt, ...);
 MDBX_INTERNAL int osal_vasprintf(char **strp, const char *fmt, va_list ap);
 #endif
 
@@ -1407,14 +1335,12 @@ MDBX_MAYBE_UNUSED MDBX_INTERNAL void osal_jitter(bool tiny);
 #else
 #define MAX_WRITE UINT32_C(0x3f000000)
 
-#if defined(F_GETLK64) && defined(F_SETLK64) && defined(F_SETLKW64) &&         \
-    !defined(__ANDROID_API__)
+#if defined(F_GETLK64) && defined(F_SETLK64) && defined(F_SETLKW64) && !defined(__ANDROID_API__)
 #define MDBX_F_SETLK F_SETLK64
 #define MDBX_F_SETLKW F_SETLKW64
 #define MDBX_F_GETLK F_GETLK64
-#if (__GLIBC_PREREQ(2, 28) &&                                                  \
-     (defined(__USE_LARGEFILE64) || defined(__LARGEFILE64_SOURCE) ||           \
-      defined(_USE_LARGEFILE64) || defined(_LARGEFILE64_SOURCE))) ||           \
+#if (__GLIBC_PREREQ(2, 28) && (defined(__USE_LARGEFILE64) || defined(__LARGEFILE64_SOURCE) ||                          \
+                               defined(_USE_LARGEFILE64) || defined(_LARGEFILE64_SOURCE))) ||                          \
     defined(fcntl64)
 #define MDBX_FCNTL fcntl64
 #else
@@ -1432,8 +1358,7 @@ MDBX_MAYBE_UNUSED MDBX_INTERNAL void osal_jitter(bool tiny);
 #define MDBX_STRUCT_FLOCK struct flock
 #endif /* MDBX_F_SETLK, MDBX_F_SETLKW, MDBX_F_GETLK */
 
-#if defined(F_OFD_SETLK64) && defined(F_OFD_SETLKW64) &&                       \
-    defined(F_OFD_GETLK64) && !defined(__ANDROID_API__)
+#if defined(F_OFD_SETLK64) && defined(F_OFD_SETLKW64) && defined(F_OFD_GETLK64) && !defined(__ANDROID_API__)
 #define MDBX_F_OFD_SETLK F_OFD_SETLK64
 #define MDBX_F_OFD_SETLKW F_OFD_SETLKW64
 #define MDBX_F_OFD_GETLK F_OFD_GETLK64
@@ -1442,8 +1367,7 @@ MDBX_MAYBE_UNUSED MDBX_INTERNAL void osal_jitter(bool tiny);
 #define MDBX_F_OFD_SETLKW F_OFD_SETLKW
 #define MDBX_F_OFD_GETLK F_OFD_GETLK
 #ifndef OFF_T_MAX
-#define OFF_T_MAX                                                              \
-  (((sizeof(off_t) > 4) ? INT64_MAX : INT32_MAX) & ~(size_t)0xFffff)
+#define OFF_T_MAX (((sizeof(off_t) > 4) ? INT64_MAX : INT32_MAX) & ~(size_t)0xFffff)
 #endif /* OFF_T_MAX */
 #endif /* MDBX_F_OFD_SETLK64, MDBX_F_OFD_SETLKW64, MDBX_F_OFD_GETLK64 */
 
@@ -1463,8 +1387,7 @@ MDBX_MAYBE_UNUSED static inline int osal_get_errno(void) {
 }
 
 #ifndef osal_memalign_alloc
-MDBX_INTERNAL int osal_memalign_alloc(size_t alignment, size_t bytes,
-                                      void **result);
+MDBX_INTERNAL int osal_memalign_alloc(size_t alignment, size_t bytes, void **result);
 #endif
 #ifndef osal_memalign_free
 MDBX_INTERNAL void osal_memalign_free(void *ptr);
@@ -1482,19 +1405,13 @@ MDBX_INTERNAL int osal_fastmutex_acquire(osal_fastmutex_t *fastmutex);
 MDBX_INTERNAL int osal_fastmutex_release(osal_fastmutex_t *fastmutex);
 MDBX_INTERNAL int osal_fastmutex_destroy(osal_fastmutex_t *fastmutex);
 
-MDBX_INTERNAL int osal_pwritev(mdbx_filehandle_t fd, struct iovec *iov,
-                               size_t sgvcnt, uint64_t offset);
-MDBX_INTERNAL int osal_pread(mdbx_filehandle_t fd, void *buf, size_t count,
-                             uint64_t offset);
-MDBX_INTERNAL int osal_pwrite(mdbx_filehandle_t fd, const void *buf,
-                              size_t count, uint64_t offset);
-MDBX_INTERNAL int osal_write(mdbx_filehandle_t fd, const void *buf,
-                             size_t count);
+MDBX_INTERNAL int osal_pwritev(mdbx_filehandle_t fd, struct iovec *iov, size_t sgvcnt, uint64_t offset);
+MDBX_INTERNAL int osal_pread(mdbx_filehandle_t fd, void *buf, size_t count, uint64_t offset);
+MDBX_INTERNAL int osal_pwrite(mdbx_filehandle_t fd, const void *buf, size_t count, uint64_t offset);
+MDBX_INTERNAL int osal_write(mdbx_filehandle_t fd, const void *buf, size_t count);
 
-MDBX_INTERNAL int
-osal_thread_create(osal_thread_t *thread,
-                   THREAD_RESULT(THREAD_CALL *start_routine)(void *),
-                   void *arg);
+MDBX_INTERNAL int osal_thread_create(osal_thread_t *thread, THREAD_RESULT(THREAD_CALL *start_routine)(void *),
+                                     void *arg);
 MDBX_INTERNAL int osal_thread_join(osal_thread_t thread);
 
 enum osal_syncmode_bits {
@@ -1505,8 +1422,7 @@ enum osal_syncmode_bits {
   MDBX_SYNC_IODQ = 8
 };
 
-MDBX_INTERNAL int osal_fsync(mdbx_filehandle_t fd,
-                             const enum osal_syncmode_bits mode_bits);
+MDBX_INTERNAL int osal_fsync(mdbx_filehandle_t fd, const enum osal_syncmode_bits mode_bits);
 MDBX_INTERNAL int osal_ftruncate(mdbx_filehandle_t fd, uint64_t length);
 MDBX_INTERNAL int osal_fseek(mdbx_filehandle_t fd, uint64_t pos);
 MDBX_INTERNAL int osal_filesize(mdbx_filehandle_t fd, uint64_t *length);
@@ -1532,14 +1448,11 @@ MDBX_MAYBE_UNUSED static inline bool osal_isdirsep(pathchar_t c) {
       c == '/';
 }
 
-MDBX_INTERNAL bool osal_pathequal(const pathchar_t *l, const pathchar_t *r,
-                                  size_t len);
+MDBX_INTERNAL bool osal_pathequal(const pathchar_t *l, const pathchar_t *r, size_t len);
 MDBX_INTERNAL pathchar_t *osal_fileext(const pathchar_t *pathname, size_t len);
 MDBX_INTERNAL int osal_fileexists(const pathchar_t *pathname);
-MDBX_INTERNAL int osal_openfile(const enum osal_openfile_purpose purpose,
-                                const MDBX_env *env, const pathchar_t *pathname,
-                                mdbx_filehandle_t *fd,
-                                mdbx_mode_t unix_mode_bits);
+MDBX_INTERNAL int osal_openfile(const enum osal_openfile_purpose purpose, const MDBX_env *env,
+                                const pathchar_t *pathname, mdbx_filehandle_t *fd, mdbx_mode_t unix_mode_bits);
 MDBX_INTERNAL int osal_closefile(mdbx_filehandle_t fd);
 MDBX_INTERNAL int osal_removefile(const pathchar_t *pathname);
 MDBX_INTERNAL int osal_removedirectory(const pathchar_t *pathname);
@@ -1548,27 +1461,24 @@ MDBX_INTERNAL int osal_lockfile(mdbx_filehandle_t fd, bool wait);
 
 #define MMAP_OPTION_TRUNCATE 1
 #define MMAP_OPTION_SEMAPHORE 2
-MDBX_INTERNAL int osal_mmap(const int flags, osal_mmap_t *map, size_t size,
-                            const size_t limit, const unsigned options);
+MDBX_INTERNAL int osal_mmap(const int flags, osal_mmap_t *map, size_t size, const size_t limit, const unsigned options,
+                            const pathchar_t *pathname4logging);
 MDBX_INTERNAL int osal_munmap(osal_mmap_t *map);
 #define MDBX_MRESIZE_MAY_MOVE 0x00000100
 #define MDBX_MRESIZE_MAY_UNMAP 0x00000200
-MDBX_INTERNAL int osal_mresize(const int flags, osal_mmap_t *map, size_t size,
-                               size_t limit);
+MDBX_INTERNAL int osal_mresize(const int flags, osal_mmap_t *map, size_t size, size_t limit);
 #if defined(_WIN32) || defined(_WIN64)
 typedef struct {
   unsigned limit, count;
   HANDLE handles[31];
 } mdbx_handle_array_t;
-MDBX_INTERNAL int
-osal_suspend_threads_before_remap(MDBX_env *env, mdbx_handle_array_t **array);
+MDBX_INTERNAL int osal_suspend_threads_before_remap(MDBX_env *env, mdbx_handle_array_t **array);
 MDBX_INTERNAL int osal_resume_threads_after_remap(mdbx_handle_array_t *array);
 #endif /* Windows */
-MDBX_INTERNAL int osal_msync(const osal_mmap_t *map, size_t offset,
-                             size_t length, enum osal_syncmode_bits mode_bits);
-MDBX_INTERNAL int osal_check_fs_rdonly(mdbx_filehandle_t handle,
-                                       const pathchar_t *pathname, int err);
+MDBX_INTERNAL int osal_msync(const osal_mmap_t *map, size_t offset, size_t length, enum osal_syncmode_bits mode_bits);
+MDBX_INTERNAL int osal_check_fs_rdonly(mdbx_filehandle_t handle, const pathchar_t *pathname, int err);
 MDBX_INTERNAL int osal_check_fs_incore(mdbx_filehandle_t handle);
+MDBX_INTERNAL int osal_check_fs_local(mdbx_filehandle_t handle, int flags);
 
 MDBX_MAYBE_UNUSED static inline uint32_t osal_getpid(void) {
   STATIC_ASSERT(sizeof(mdbx_pid_t) <= sizeof(uint32_t));
@@ -1598,8 +1508,7 @@ MDBX_INTERNAL int osal_check_tid4bionic(void);
 static inline int osal_check_tid4bionic(void) { return 0; }
 #endif /* __ANDROID_API__ || ANDROID) || BIONIC */
 
-MDBX_MAYBE_UNUSED static inline int
-osal_pthread_mutex_lock(pthread_mutex_t *mutex) {
+MDBX_MAYBE_UNUSED static inline int osal_pthread_mutex_lock(pthread_mutex_t *mutex) {
   int err = osal_check_tid4bionic();
   return unlikely(err) ? err : pthread_mutex_lock(mutex);
 }
@@ -1610,8 +1519,7 @@ MDBX_INTERNAL uint64_t osal_cputime(size_t *optional_page_faults);
 MDBX_INTERNAL uint64_t osal_16dot16_to_monotime(uint32_t seconds_16dot16);
 MDBX_INTERNAL uint32_t osal_monotime_to_16dot16(uint64_t monotime);
 
-MDBX_MAYBE_UNUSED static inline uint32_t
-osal_monotime_to_16dot16_noUnderflow(uint64_t monotime) {
+MDBX_MAYBE_UNUSED static inline uint32_t osal_monotime_to_16dot16_noUnderflow(uint64_t monotime) {
   uint32_t seconds_16dot16 = osal_monotime_to_16dot16(monotime);
   return seconds_16dot16 ? seconds_16dot16 : /* fix underflow */ (monotime > 0);
 }
@@ -1638,10 +1546,8 @@ MDBX_INTERNAL bin128_t osal_guid(const MDBX_env *);
 
 /*----------------------------------------------------------------------------*/
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline uint64_t
-osal_bswap64(uint64_t v) {
-#if __GNUC_PREREQ(4, 4) || __CLANG_PREREQ(4, 0) ||                             \
-    __has_builtin(__builtin_bswap64)
+MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline uint64_t osal_bswap64(uint64_t v) {
+#if __GNUC_PREREQ(4, 4) || __CLANG_PREREQ(4, 0) || __has_builtin(__builtin_bswap64)
   return __builtin_bswap64(v);
 #elif defined(_MSC_VER) && !defined(__clang__)
   return _byteswap_uint64(v);
@@ -1650,19 +1556,14 @@ osal_bswap64(uint64_t v) {
 #elif defined(bswap_64)
   return bswap_64(v);
 #else
-  return v << 56 | v >> 56 | ((v << 40) & UINT64_C(0x00ff000000000000)) |
-         ((v << 24) & UINT64_C(0x0000ff0000000000)) |
-         ((v << 8) & UINT64_C(0x000000ff00000000)) |
-         ((v >> 8) & UINT64_C(0x00000000ff000000)) |
-         ((v >> 24) & UINT64_C(0x0000000000ff0000)) |
-         ((v >> 40) & UINT64_C(0x000000000000ff00));
+  return v << 56 | v >> 56 | ((v << 40) & UINT64_C(0x00ff000000000000)) | ((v << 24) & UINT64_C(0x0000ff0000000000)) |
+         ((v << 8) & UINT64_C(0x000000ff00000000)) | ((v >> 8) & UINT64_C(0x00000000ff000000)) |
+         ((v >> 24) & UINT64_C(0x0000000000ff0000)) | ((v >> 40) & UINT64_C(0x000000000000ff00));
 #endif
 }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline uint32_t
-osal_bswap32(uint32_t v) {
-#if __GNUC_PREREQ(4, 4) || __CLANG_PREREQ(4, 0) ||                             \
-    __has_builtin(__builtin_bswap32)
+MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline uint32_t osal_bswap32(uint32_t v) {
+#if __GNUC_PREREQ(4, 4) || __CLANG_PREREQ(4, 0) || __has_builtin(__builtin_bswap32)
   return __builtin_bswap32(v);
 #elif defined(_MSC_VER) && !defined(__clang__)
   return _byteswap_ulong(v);
@@ -1671,8 +1572,7 @@ osal_bswap32(uint32_t v) {
 #elif defined(bswap_32)
   return bswap_32(v);
 #else
-  return v << 24 | v >> 24 | ((v << 8) & UINT32_C(0x00ff0000)) |
-         ((v >> 8) & UINT32_C(0x0000ff00));
+  return v << 24 | v >> 24 | ((v << 8) & UINT32_C(0x00ff0000)) | ((v >> 8) & UINT32_C(0x0000ff00));
 #endif
 }
 
@@ -1681,7 +1581,6 @@ osal_bswap32(uint32_t v) {
 #else
 #define MDBX_WORDBITS 32
 #endif /* MDBX_WORDBITS */
-
 
 /*******************************************************************************
  *******************************************************************************
@@ -1698,8 +1597,6 @@ osal_bswap32(uint32_t v) {
  *
  */
 
-
-
 /** \defgroup build_option Build options
  * The libmdbx build options.
  @{ */
@@ -1709,23 +1606,15 @@ osal_bswap32(uint32_t v) {
 /** Using fsync() with chance of data lost on power failure */
 #define MDBX_OSX_WANNA_SPEED 1
 
-#ifndef MDBX_OSX_SPEED_INSTEADOF_DURABILITY
+#ifndef MDBX_APPLE_SPEED_INSTEADOF_DURABILITY
 /** Choices \ref MDBX_OSX_WANNA_DURABILITY or \ref MDBX_OSX_WANNA_SPEED
  * for OSX & iOS */
-#define MDBX_OSX_SPEED_INSTEADOF_DURABILITY MDBX_OSX_WANNA_DURABILITY
-#endif /* MDBX_OSX_SPEED_INSTEADOF_DURABILITY */
-
-/** Controls using of POSIX' madvise() and/or similar hints. */
-#ifndef MDBX_ENABLE_MADVISE
-#define MDBX_ENABLE_MADVISE 1
-#elif !(MDBX_ENABLE_MADVISE == 0 || MDBX_ENABLE_MADVISE == 1)
-#error MDBX_ENABLE_MADVISE must be defined as 0 or 1
-#endif /* MDBX_ENABLE_MADVISE */
+#define MDBX_APPLE_SPEED_INSTEADOF_DURABILITY MDBX_OSX_WANNA_DURABILITY
+#endif /* MDBX_APPLE_SPEED_INSTEADOF_DURABILITY */
 
 /** Controls checking PID against reuse DB environment after the fork() */
 #ifndef MDBX_ENV_CHECKPID
-#if (defined(MADV_DONTFORK) && MDBX_ENABLE_MADVISE) || defined(_WIN32) ||      \
-    defined(_WIN64)
+#if defined(MADV_DONTFORK) || defined(_WIN32) || defined(_WIN64)
 /* PID check could be omitted:
  *  - on Linux when madvise(MADV_DONTFORK) is available, i.e. after the fork()
  *    mapped pages will not be available for child process.
@@ -1754,8 +1643,7 @@ osal_bswap32(uint32_t v) {
 
 /** Does a system have battery-backed Real-Time Clock or just a fake. */
 #ifndef MDBX_TRUST_RTC
-#if defined(__linux__) || defined(__gnu_linux__) || defined(__NetBSD__) ||     \
-    defined(__OpenBSD__)
+#if defined(__linux__) || defined(__gnu_linux__) || defined(__NetBSD__) || defined(__OpenBSD__)
 #define MDBX_TRUST_RTC 0 /* a lot of embedded systems have a fake RTC */
 #else
 #define MDBX_TRUST_RTC 1
@@ -1790,24 +1678,21 @@ osal_bswap32(uint32_t v) {
 
 /** Controls using Unix' mincore() to determine whether DB-pages
  * are resident in memory. */
-#ifndef MDBX_ENABLE_MINCORE
+#ifndef MDBX_USE_MINCORE
 #if defined(MINCORE_INCORE) || !(defined(_WIN32) || defined(_WIN64))
-#define MDBX_ENABLE_MINCORE 1
+#define MDBX_USE_MINCORE 1
 #else
-#define MDBX_ENABLE_MINCORE 0
+#define MDBX_USE_MINCORE 0
 #endif
-#elif !(MDBX_ENABLE_MINCORE == 0 || MDBX_ENABLE_MINCORE == 1)
-#error MDBX_ENABLE_MINCORE must be defined as 0 or 1
-#endif /* MDBX_ENABLE_MINCORE */
+#define MDBX_USE_MINCORE_CONFIG "AUTO=" MDBX_STRINGIFY(MDBX_USE_MINCORE)
+#elif !(MDBX_USE_MINCORE == 0 || MDBX_USE_MINCORE == 1)
+#error MDBX_USE_MINCORE must be defined as 0 or 1
+#endif /* MDBX_USE_MINCORE */
 
 /** Enables chunking long list of retired pages during huge transactions commit
  * to avoid use sequences of pages. */
 #ifndef MDBX_ENABLE_BIGFOOT
-#if MDBX_WORDBITS >= 64 || defined(DOXYGEN)
 #define MDBX_ENABLE_BIGFOOT 1
-#else
-#define MDBX_ENABLE_BIGFOOT 0
-#endif
 #elif !(MDBX_ENABLE_BIGFOOT == 0 || MDBX_ENABLE_BIGFOOT == 1)
 #error MDBX_ENABLE_BIGFOOT must be defined as 0 or 1
 #endif /* MDBX_ENABLE_BIGFOOT */
@@ -1822,25 +1707,27 @@ osal_bswap32(uint32_t v) {
 
 #ifndef MDBX_PNL_PREALLOC_FOR_RADIXSORT
 #define MDBX_PNL_PREALLOC_FOR_RADIXSORT 1
-#elif !(MDBX_PNL_PREALLOC_FOR_RADIXSORT == 0 ||                                \
-        MDBX_PNL_PREALLOC_FOR_RADIXSORT == 1)
+#elif !(MDBX_PNL_PREALLOC_FOR_RADIXSORT == 0 || MDBX_PNL_PREALLOC_FOR_RADIXSORT == 1)
 #error MDBX_PNL_PREALLOC_FOR_RADIXSORT must be defined as 0 or 1
 #endif /* MDBX_PNL_PREALLOC_FOR_RADIXSORT */
 
 #ifndef MDBX_DPL_PREALLOC_FOR_RADIXSORT
 #define MDBX_DPL_PREALLOC_FOR_RADIXSORT 1
-#elif !(MDBX_DPL_PREALLOC_FOR_RADIXSORT == 0 ||                                \
-        MDBX_DPL_PREALLOC_FOR_RADIXSORT == 1)
+#elif !(MDBX_DPL_PREALLOC_FOR_RADIXSORT == 0 || MDBX_DPL_PREALLOC_FOR_RADIXSORT == 1)
 #error MDBX_DPL_PREALLOC_FOR_RADIXSORT must be defined as 0 or 1
 #endif /* MDBX_DPL_PREALLOC_FOR_RADIXSORT */
 
 /** Controls dirty pages tracking, spilling and persisting in `MDBX_WRITEMAP`
- * mode. 0/OFF = Don't track dirty pages at all, don't spill ones, and use
- * msync() to persist data. This is by-default on Linux and other systems where
- * kernel provides properly LRU tracking and effective flushing on-demand. 1/ON
- * = Tracking of dirty pages but with LRU labels for spilling and explicit
- * persist ones by write(). This may be reasonable for systems which low
- * performance of msync() and/or LRU tracking. */
+ * mode, i.e. disables in-memory database updating with consequent
+ * flush-to-disk/msync syscall.
+ *
+ * 0/OFF = Don't track dirty pages at all, don't spill ones, and use msync() to
+ * persist data. This is by-default on Linux and other systems where kernel
+ * provides properly LRU tracking and effective flushing on-demand.
+ *
+ * 1/ON = Tracking of dirty pages but with LRU labels for spilling and explicit
+ * persist ones by write(). This may be reasonable for goofy systems (Windows)
+ * which low performance of msync() and/or zany LRU tracking. */
 #ifndef MDBX_AVOID_MSYNC
 #if defined(_WIN32) || defined(_WIN64)
 #define MDBX_AVOID_MSYNC 1
@@ -1879,7 +1766,7 @@ osal_bswap32(uint32_t v) {
 
 /** Avoid dependence from MSVC CRT and use ntdll.dll instead. */
 #ifndef MDBX_WITHOUT_MSVC_CRT
-#if !defined(MDBX_BUILD_CXX) || !MDBX_BUILD_CXX
+#if defined(MDBX_BUILD_CXX) && !MDBX_BUILD_CXX
 #define MDBX_WITHOUT_MSVC_CRT 1
 #else
 #define MDBX_WITHOUT_MSVC_CRT 0
@@ -1891,12 +1778,11 @@ osal_bswap32(uint32_t v) {
 /** Size of buffer used during copying a environment/database file. */
 #ifndef MDBX_ENVCOPY_WRITEBUF
 #define MDBX_ENVCOPY_WRITEBUF 1048576u
-#elif MDBX_ENVCOPY_WRITEBUF < 65536u || MDBX_ENVCOPY_WRITEBUF > 1073741824u || \
-    MDBX_ENVCOPY_WRITEBUF % 65536u
+#elif MDBX_ENVCOPY_WRITEBUF < 65536u || MDBX_ENVCOPY_WRITEBUF > 1073741824u || MDBX_ENVCOPY_WRITEBUF % 65536u
 #error MDBX_ENVCOPY_WRITEBUF must be defined in range 65536..1073741824 and be multiple of 65536
 #endif /* MDBX_ENVCOPY_WRITEBUF */
 
-/** Forces assertion checking */
+/** Forces assertion checking. */
 #ifndef MDBX_FORCE_ASSERTIONS
 #define MDBX_FORCE_ASSERTIONS 0
 #elif !(MDBX_FORCE_ASSERTIONS == 0 || MDBX_FORCE_ASSERTIONS == 1)
@@ -1911,8 +1797,7 @@ osal_bswap32(uint32_t v) {
 #else
 #define MDBX_ASSUME_MALLOC_OVERHEAD (sizeof(void *) * 2u)
 #endif
-#elif MDBX_ASSUME_MALLOC_OVERHEAD < 0 || MDBX_ASSUME_MALLOC_OVERHEAD > 64 ||   \
-    MDBX_ASSUME_MALLOC_OVERHEAD % 4
+#elif MDBX_ASSUME_MALLOC_OVERHEAD < 0 || MDBX_ASSUME_MALLOC_OVERHEAD > 64 || MDBX_ASSUME_MALLOC_OVERHEAD % 4
 #error MDBX_ASSUME_MALLOC_OVERHEAD must be defined in range 0..64 and be multiple of 4
 #endif /* MDBX_ASSUME_MALLOC_OVERHEAD */
 
@@ -1939,17 +1824,23 @@ osal_bswap32(uint32_t v) {
 #define MDBX_HAVE_BUILTIN_CPU_SUPPORTS 0
 #elif defined(__e2k__)
 #define MDBX_HAVE_BUILTIN_CPU_SUPPORTS 0
-#elif __has_builtin(__builtin_cpu_supports) ||                                 \
-    defined(__BUILTIN_CPU_SUPPORTS__) ||                                       \
+#elif __has_builtin(__builtin_cpu_supports) || defined(__BUILTIN_CPU_SUPPORTS__) ||                                    \
     (defined(__ia32__) && __GNUC_PREREQ(4, 8) && __GLIBC_PREREQ(2, 23))
 #define MDBX_HAVE_BUILTIN_CPU_SUPPORTS 1
 #else
 #define MDBX_HAVE_BUILTIN_CPU_SUPPORTS 0
 #endif
-#elif !(MDBX_HAVE_BUILTIN_CPU_SUPPORTS == 0 ||                                 \
-        MDBX_HAVE_BUILTIN_CPU_SUPPORTS == 1)
+#elif !(MDBX_HAVE_BUILTIN_CPU_SUPPORTS == 0 || MDBX_HAVE_BUILTIN_CPU_SUPPORTS == 1)
 #error MDBX_HAVE_BUILTIN_CPU_SUPPORTS must be defined as 0 or 1
 #endif /* MDBX_HAVE_BUILTIN_CPU_SUPPORTS */
+
+/** if enabled then instead of the returned error `MDBX_REMOTE`, only a warning is issued, when
+ * the database being opened in non-read-only mode is located in a file system exported via NFS. */
+#ifndef MDBX_ENABLE_NON_READONLY_EXPORT
+#define MDBX_ENABLE_NON_READONLY_EXPORT 0
+#elif !(MDBX_ENABLE_NON_READONLY_EXPORT == 0 || MDBX_ENABLE_NON_READONLY_EXPORT == 1)
+#error MDBX_ENABLE_NON_READONLY_EXPORT must be defined as 0 or 1
+#endif /* MDBX_ENABLE_NON_READONLY_EXPORT */
 
 //------------------------------------------------------------------------------
 
@@ -1968,27 +1859,20 @@ osal_bswap32(uint32_t v) {
 /** POSIX-2008 Robust Mutexes for \ref MDBX_LOCKING */
 #define MDBX_LOCKING_POSIX2008 2008
 
-/** BeOS Benaphores, aka Futexes for \ref MDBX_LOCKING */
-#define MDBX_LOCKING_BENAPHORE 1995
-
 /** Advanced: Choices the locking implementation (autodetection by default). */
 #if defined(_WIN32) || defined(_WIN64)
 #define MDBX_LOCKING MDBX_LOCKING_WIN32FILES
 #else
 #ifndef MDBX_LOCKING
-#if defined(_POSIX_THREAD_PROCESS_SHARED) &&                                   \
-    _POSIX_THREAD_PROCESS_SHARED >= 200112L && !defined(__FreeBSD__)
+#if defined(_POSIX_THREAD_PROCESS_SHARED) && _POSIX_THREAD_PROCESS_SHARED >= 200112L && !defined(__FreeBSD__)
 
 /* Some platforms define the EOWNERDEAD error code even though they
  * don't support Robust Mutexes. If doubt compile with -MDBX_LOCKING=2001. */
-#if defined(EOWNERDEAD) && _POSIX_THREAD_PROCESS_SHARED >= 200809L &&          \
-    ((defined(_POSIX_THREAD_ROBUST_PRIO_INHERIT) &&                            \
-      _POSIX_THREAD_ROBUST_PRIO_INHERIT > 0) ||                                \
-     (defined(_POSIX_THREAD_ROBUST_PRIO_PROTECT) &&                            \
-      _POSIX_THREAD_ROBUST_PRIO_PROTECT > 0) ||                                \
-     defined(PTHREAD_MUTEX_ROBUST) || defined(PTHREAD_MUTEX_ROBUST_NP)) &&     \
-    (!defined(__GLIBC__) ||                                                    \
-     __GLIBC_PREREQ(2, 10) /* troubles with Robust mutexes before 2.10 */)
+#if defined(EOWNERDEAD) && _POSIX_THREAD_PROCESS_SHARED >= 200809L &&                                                  \
+    ((defined(_POSIX_THREAD_ROBUST_PRIO_INHERIT) && _POSIX_THREAD_ROBUST_PRIO_INHERIT > 0) ||                          \
+     (defined(_POSIX_THREAD_ROBUST_PRIO_PROTECT) && _POSIX_THREAD_ROBUST_PRIO_PROTECT > 0) ||                          \
+     defined(PTHREAD_MUTEX_ROBUST) || defined(PTHREAD_MUTEX_ROBUST_NP)) &&                                             \
+    (!defined(__GLIBC__) || __GLIBC_PREREQ(2, 10) /* troubles with Robust mutexes before 2.10 */)
 #define MDBX_LOCKING MDBX_LOCKING_POSIX2008
 #else
 #define MDBX_LOCKING MDBX_LOCKING_POSIX2001
@@ -2006,12 +1890,9 @@ osal_bswap32(uint32_t v) {
 
 /** Advanced: Using POSIX OFD-locks (autodetection by default). */
 #ifndef MDBX_USE_OFDLOCKS
-#if ((defined(F_OFD_SETLK) && defined(F_OFD_SETLKW) &&                         \
-      defined(F_OFD_GETLK)) ||                                                 \
-     (defined(F_OFD_SETLK64) && defined(F_OFD_SETLKW64) &&                     \
-      defined(F_OFD_GETLK64))) &&                                              \
-    !defined(MDBX_SAFE4QEMU) &&                                                \
-    !defined(__sun) /* OFD-lock are broken on Solaris */
+#if ((defined(F_OFD_SETLK) && defined(F_OFD_SETLKW) && defined(F_OFD_GETLK)) ||                                        \
+     (defined(F_OFD_SETLK64) && defined(F_OFD_SETLKW64) && defined(F_OFD_GETLK64))) &&                                 \
+    !defined(MDBX_SAFE4QEMU) && !defined(__sun) /* OFD-lock are broken on Solaris */
 #define MDBX_USE_OFDLOCKS 1
 #else
 #define MDBX_USE_OFDLOCKS 0
@@ -2025,8 +1906,7 @@ osal_bswap32(uint32_t v) {
 
 /** Advanced: Using sendfile() syscall (autodetection by default). */
 #ifndef MDBX_USE_SENDFILE
-#if ((defined(__linux__) || defined(__gnu_linux__)) &&                         \
-     !defined(__ANDROID_API__)) ||                                             \
+#if ((defined(__linux__) || defined(__gnu_linux__)) && !defined(__ANDROID_API__)) ||                                   \
     (defined(__ANDROID_API__) && __ANDROID_API__ >= 21)
 #define MDBX_USE_SENDFILE 1
 #else
@@ -2047,30 +1927,15 @@ osal_bswap32(uint32_t v) {
 #error MDBX_USE_COPYFILERANGE must be defined as 0 or 1
 #endif /* MDBX_USE_COPYFILERANGE */
 
-/** Advanced: Using sync_file_range() syscall (autodetection by default). */
-#ifndef MDBX_USE_SYNCFILERANGE
-#if ((defined(__linux__) || defined(__gnu_linux__)) &&                         \
-     defined(SYNC_FILE_RANGE_WRITE) && !defined(__ANDROID_API__)) ||           \
-    (defined(__ANDROID_API__) && __ANDROID_API__ >= 26)
-#define MDBX_USE_SYNCFILERANGE 1
-#else
-#define MDBX_USE_SYNCFILERANGE 0
-#endif
-#elif !(MDBX_USE_SYNCFILERANGE == 0 || MDBX_USE_SYNCFILERANGE == 1)
-#error MDBX_USE_SYNCFILERANGE must be defined as 0 or 1
-#endif /* MDBX_USE_SYNCFILERANGE */
-
 //------------------------------------------------------------------------------
 
 #ifndef MDBX_CPU_WRITEBACK_INCOHERENT
-#if defined(__ia32__) || defined(__e2k__) || defined(__hppa) ||                \
-    defined(__hppa__) || defined(DOXYGEN)
+#if defined(__ia32__) || defined(__e2k__) || defined(__hppa) || defined(__hppa__) || defined(DOXYGEN)
 #define MDBX_CPU_WRITEBACK_INCOHERENT 0
 #else
 #define MDBX_CPU_WRITEBACK_INCOHERENT 1
 #endif
-#elif !(MDBX_CPU_WRITEBACK_INCOHERENT == 0 ||                                  \
-        MDBX_CPU_WRITEBACK_INCOHERENT == 1)
+#elif !(MDBX_CPU_WRITEBACK_INCOHERENT == 0 || MDBX_CPU_WRITEBACK_INCOHERENT == 1)
 #error MDBX_CPU_WRITEBACK_INCOHERENT must be defined as 0 or 1
 #endif /* MDBX_CPU_WRITEBACK_INCOHERENT */
 
@@ -2080,35 +1945,35 @@ osal_bswap32(uint32_t v) {
 #else
 #define MDBX_MMAP_INCOHERENT_FILE_WRITE 0
 #endif
-#elif !(MDBX_MMAP_INCOHERENT_FILE_WRITE == 0 ||                                \
-        MDBX_MMAP_INCOHERENT_FILE_WRITE == 1)
+#elif !(MDBX_MMAP_INCOHERENT_FILE_WRITE == 0 || MDBX_MMAP_INCOHERENT_FILE_WRITE == 1)
 #error MDBX_MMAP_INCOHERENT_FILE_WRITE must be defined as 0 or 1
 #endif /* MDBX_MMAP_INCOHERENT_FILE_WRITE */
 
 #ifndef MDBX_MMAP_INCOHERENT_CPU_CACHE
-#if defined(__mips) || defined(__mips__) || defined(__mips64) ||               \
-    defined(__mips64__) || defined(_M_MRX000) || defined(_MIPS_) ||            \
-    defined(__MWERKS__) || defined(__sgi)
+#if defined(__mips) || defined(__mips__) || defined(__mips64) || defined(__mips64__) || defined(_M_MRX000) ||          \
+    defined(_MIPS_) || defined(__MWERKS__) || defined(__sgi)
 /* MIPS has cache coherency issues. */
 #define MDBX_MMAP_INCOHERENT_CPU_CACHE 1
 #else
 /* LY: assume no relevant mmap/dcache issues. */
 #define MDBX_MMAP_INCOHERENT_CPU_CACHE 0
 #endif
-#elif !(MDBX_MMAP_INCOHERENT_CPU_CACHE == 0 ||                                 \
-        MDBX_MMAP_INCOHERENT_CPU_CACHE == 1)
+#elif !(MDBX_MMAP_INCOHERENT_CPU_CACHE == 0 || MDBX_MMAP_INCOHERENT_CPU_CACHE == 1)
 #error MDBX_MMAP_INCOHERENT_CPU_CACHE must be defined as 0 or 1
 #endif /* MDBX_MMAP_INCOHERENT_CPU_CACHE */
 
-#ifndef MDBX_MMAP_USE_MS_ASYNC
-#if MDBX_MMAP_INCOHERENT_FILE_WRITE || MDBX_MMAP_INCOHERENT_CPU_CACHE
-#define MDBX_MMAP_USE_MS_ASYNC 1
+/** Assume system needs explicit syscall to sync/flush/write modified mapped
+ * memory. */
+#ifndef MDBX_MMAP_NEEDS_JOLT
+#if MDBX_MMAP_INCOHERENT_FILE_WRITE || MDBX_MMAP_INCOHERENT_CPU_CACHE || !(defined(__linux__) || defined(__gnu_linux__))
+#define MDBX_MMAP_NEEDS_JOLT 1
 #else
-#define MDBX_MMAP_USE_MS_ASYNC 0
+#define MDBX_MMAP_NEEDS_JOLT 0
 #endif
-#elif !(MDBX_MMAP_USE_MS_ASYNC == 0 || MDBX_MMAP_USE_MS_ASYNC == 1)
-#error MDBX_MMAP_USE_MS_ASYNC must be defined as 0 or 1
-#endif /* MDBX_MMAP_USE_MS_ASYNC */
+#define MDBX_MMAP_NEEDS_JOLT_CONFIG "AUTO=" MDBX_STRINGIFY(MDBX_MMAP_NEEDS_JOLT)
+#elif !(MDBX_MMAP_NEEDS_JOLT == 0 || MDBX_MMAP_NEEDS_JOLT == 1)
+#error MDBX_MMAP_NEEDS_JOLT must be defined as 0 or 1
+#endif /* MDBX_MMAP_NEEDS_JOLT */
 
 #ifndef MDBX_64BIT_ATOMIC
 #if MDBX_WORDBITS >= 64 || defined(DOXYGEN)
@@ -2155,8 +2020,7 @@ osal_bswap32(uint32_t v) {
 #endif /* MDBX_64BIT_CAS */
 
 #ifndef MDBX_UNALIGNED_OK
-#if defined(__ALIGNED__) || defined(__SANITIZE_UNDEFINED__) ||                 \
-    defined(ENABLE_UBSAN)
+#if defined(__ALIGNED__) || defined(__SANITIZE_UNDEFINED__) || defined(ENABLE_UBSAN)
 #define MDBX_UNALIGNED_OK 0 /* no unaligned access allowed */
 #elif defined(__ARM_FEATURE_UNALIGNED)
 #define MDBX_UNALIGNED_OK 4 /* ok unaligned for 32-bit words */
@@ -2191,12 +2055,18 @@ osal_bswap32(uint32_t v) {
 #endif /* MDBX_CACHELINE_SIZE */
 
 /* Max length of iov-vector passed to writev() call, used for auxilary writes */
+#ifndef MDBX_AUXILARY_IOV_MAX
 #define MDBX_AUXILARY_IOV_MAX 64
+#endif
 #if defined(IOV_MAX) && IOV_MAX < MDBX_AUXILARY_IOV_MAX
 #undef MDBX_AUXILARY_IOV_MAX
 #define MDBX_AUXILARY_IOV_MAX IOV_MAX
 #endif /* MDBX_AUXILARY_IOV_MAX */
 
+/* An extra/custom information provided during library build */
+#ifndef MDBX_BUILD_METADATA
+#define MDBX_BUILD_METADATA ""
+#endif /* MDBX_BUILD_METADATA */
 /** @} end of build options */
 /*******************************************************************************
  *******************************************************************************
@@ -2240,9 +2110,6 @@ osal_bswap32(uint32_t v) {
 
 #endif /* DOXYGEN */
 
-
-
-
 #ifndef MDBX_64BIT_ATOMIC
 #error "The MDBX_64BIT_ATOMIC must be defined before"
 #endif /* MDBX_64BIT_ATOMIC */
@@ -2254,21 +2121,19 @@ osal_bswap32(uint32_t v) {
 #if defined(__cplusplus) && !defined(__STDC_NO_ATOMICS__) && __has_include(<cstdatomic>)
 #include <cstdatomic>
 #define MDBX_HAVE_C11ATOMICS
-#elif !defined(__cplusplus) &&                                                 \
-    (__STDC_VERSION__ >= 201112L || __has_extension(c_atomic)) &&              \
-    !defined(__STDC_NO_ATOMICS__) &&                                           \
-    (__GNUC_PREREQ(4, 9) || __CLANG_PREREQ(3, 8) ||                            \
-     !(defined(__GNUC__) || defined(__clang__)))
+#elif !defined(__cplusplus) && (__STDC_VERSION__ >= 201112L || __has_extension(c_atomic)) &&                           \
+    !defined(__STDC_NO_ATOMICS__) &&                                                                                   \
+    (__GNUC_PREREQ(4, 9) || __CLANG_PREREQ(3, 8) || !(defined(__GNUC__) || defined(__clang__)))
 #include <stdatomic.h>
 #define MDBX_HAVE_C11ATOMICS
 #elif defined(__GNUC__) || defined(__clang__)
 #elif defined(_MSC_VER)
 #pragma warning(disable : 4163) /* 'xyz': not available as an intrinsic */
-#pragma warning(disable : 4133) /* 'function': incompatible types - from       \
+#pragma warning(disable : 4133) /* 'function': incompatible types - from                                               \
                                    'size_t' to 'LONGLONG' */
-#pragma warning(disable : 4244) /* 'return': conversion from 'LONGLONG' to     \
+#pragma warning(disable : 4244) /* 'return': conversion from 'LONGLONG' to                                             \
                                    'std::size_t', possible loss of data */
-#pragma warning(disable : 4267) /* 'function': conversion from 'size_t' to     \
+#pragma warning(disable : 4267) /* 'function': conversion from 'size_t' to                                             \
                                    'long', possible loss of data */
 #pragma intrinsic(_InterlockedExchangeAdd, _InterlockedCompareExchange)
 #pragma intrinsic(_InterlockedExchangeAdd64, _InterlockedCompareExchange64)
@@ -2323,21 +2188,18 @@ typedef union {
 #define MDBX_c11a_rw(type, ptr) (&(ptr)->c11a)
 #endif /* Crutches for C11 atomic compiler's bugs */
 
-#define mo_c11_store(fence)                                                    \
-  (((fence) == mo_Relaxed)          ? memory_order_relaxed                     \
-   : ((fence) == mo_AcquireRelease) ? memory_order_release                     \
+#define mo_c11_store(fence)                                                                                            \
+  (((fence) == mo_Relaxed)          ? memory_order_relaxed                                                             \
+   : ((fence) == mo_AcquireRelease) ? memory_order_release                                                             \
                                     : memory_order_seq_cst)
-#define mo_c11_load(fence)                                                     \
-  (((fence) == mo_Relaxed)          ? memory_order_relaxed                     \
-   : ((fence) == mo_AcquireRelease) ? memory_order_acquire                     \
+#define mo_c11_load(fence)                                                                                             \
+  (((fence) == mo_Relaxed)          ? memory_order_relaxed                                                             \
+   : ((fence) == mo_AcquireRelease) ? memory_order_acquire                                                             \
                                     : memory_order_seq_cst)
 
 #endif /* MDBX_HAVE_C11ATOMICS */
 
 #define SAFE64_INVALID_THRESHOLD UINT64_C(0xffffFFFF00000000)
-
-
-
 
 #pragma pack(push, 4)
 
@@ -2349,10 +2211,8 @@ typedef union {
 /* FROZEN: The version number for a database's datafile format. */
 #define MDBX_DATA_VERSION 3
 
-#define MDBX_DATA_MAGIC                                                        \
-  ((MDBX_MAGIC << 8) + MDBX_PNL_ASCENDING * 64 + MDBX_DATA_VERSION)
-#define MDBX_DATA_MAGIC_LEGACY_COMPAT                                          \
-  ((MDBX_MAGIC << 8) + MDBX_PNL_ASCENDING * 64 + 2)
+#define MDBX_DATA_MAGIC ((MDBX_MAGIC << 8) + MDBX_PNL_ASCENDING * 64 + MDBX_DATA_VERSION)
+#define MDBX_DATA_MAGIC_LEGACY_COMPAT ((MDBX_MAGIC << 8) + MDBX_PNL_ASCENDING * 64 + 2)
 #define MDBX_DATA_MAGIC_LEGACY_DEVEL ((MDBX_MAGIC << 8) + 255)
 
 /* handle for the DB used to track free pages. */
@@ -2396,7 +2256,7 @@ typedef struct tree {
   uint16_t height;      /* height of this tree */
   uint32_t dupfix_size; /* key-size for MDBX_DUPFIXED (DUPFIX pages) */
   pgno_t root;          /* the root page of this tree */
-  pgno_t branch_pages;  /* number of internal pages */
+  pgno_t branch_pages;  /* number of branch pages */
   pgno_t leaf_pages;    /* number of leaf pages */
   pgno_t large_pages;   /* number of large pages */
   uint64_t sequence;    /* table sequence counter */
@@ -2593,45 +2453,33 @@ typedef enum node_flags {
 
 #pragma pack(pop)
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline uint8_t
-page_type(const page_t *mp) {
-  return mp->flags;
-}
+MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline uint8_t page_type(const page_t *mp) { return mp->flags; }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline uint8_t
-page_type_compat(const page_t *mp) {
+MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline uint8_t page_type_compat(const page_t *mp) {
   /* Drop legacy P_DIRTY flag for sub-pages for compatilibity,
    * for assertions only. */
-  return unlikely(mp->flags & P_SUBP) ? mp->flags & ~(P_SUBP | P_LEGACY_DIRTY)
-                                      : mp->flags;
+  return unlikely(mp->flags & P_SUBP) ? mp->flags & ~(P_SUBP | P_LEGACY_DIRTY) : mp->flags;
 }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline bool
-is_leaf(const page_t *mp) {
+MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline bool is_leaf(const page_t *mp) {
   return (mp->flags & P_LEAF) != 0;
 }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline bool
-is_dupfix_leaf(const page_t *mp) {
+MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline bool is_dupfix_leaf(const page_t *mp) {
   return (mp->flags & P_DUPFIX) != 0;
 }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline bool
-is_branch(const page_t *mp) {
+MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline bool is_branch(const page_t *mp) {
   return (mp->flags & P_BRANCH) != 0;
 }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline bool
-is_largepage(const page_t *mp) {
+MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline bool is_largepage(const page_t *mp) {
   return (mp->flags & P_LARGE) != 0;
 }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline bool
-is_subpage(const page_t *mp) {
+MDBX_MAYBE_UNUSED MDBX_NOTHROW_PURE_FUNCTION static inline bool is_subpage(const page_t *mp) {
   return (mp->flags & P_SUBP) != 0;
 }
-
-
 
 /* The version number for a database's lockfile format. */
 #define MDBX_LOCK_VERSION 6
@@ -2645,8 +2493,7 @@ typedef void osal_ipclock_t;
 #define MDBX_LCK_SIGN UINT32_C(0xF18D)
 typedef mdbx_pid_t osal_ipclock_t;
 
-#elif MDBX_LOCKING == MDBX_LOCKING_POSIX2001 ||                                \
-    MDBX_LOCKING == MDBX_LOCKING_POSIX2008
+#elif MDBX_LOCKING == MDBX_LOCKING_POSIX2001 || MDBX_LOCKING == MDBX_LOCKING_POSIX2008
 
 #define MDBX_LCK_SIGN UINT32_C(0x8017)
 typedef pthread_mutex_t osal_ipclock_t;
@@ -2677,6 +2524,12 @@ typedef struct gc_prof_stat {
   uint32_t spe_counter;
   /* page faults (hard page faults) */
   uint32_t majflt;
+  /* Для разборок с pnl_merge() */
+  struct {
+    uint64_t time;
+    uint64_t volume;
+    uint32_t calls;
+  } pnl_merge;
 } gc_prof_stat_t;
 
 /* Statistics of pages operations for all transactions,
@@ -2690,19 +2543,15 @@ typedef struct pgops {
   mdbx_atomic_uint64_t merge;   /* Page merges */
   mdbx_atomic_uint64_t spill;   /* Quantity of spilled dirty pages */
   mdbx_atomic_uint64_t unspill; /* Quantity of unspilled/reloaded pages */
-  mdbx_atomic_uint64_t
-      wops; /* Number of explicit write operations (not a pages) to a disk */
-  mdbx_atomic_uint64_t
-      msync; /* Number of explicit msync/flush-to-disk operations */
-  mdbx_atomic_uint64_t
-      fsync; /* Number of explicit fsync/flush-to-disk operations */
+  mdbx_atomic_uint64_t wops;    /* Number of explicit write operations (not a pages) to a disk */
+  mdbx_atomic_uint64_t msync;   /* Number of explicit msync/flush-to-disk operations */
+  mdbx_atomic_uint64_t fsync;   /* Number of explicit fsync/flush-to-disk operations */
 
   mdbx_atomic_uint64_t prefault; /* Number of prefault write operations */
   mdbx_atomic_uint64_t mincore;  /* Number of mincore() calls */
 
-  mdbx_atomic_uint32_t
-      incoherence; /* number of https://libmdbx.dqdkfa.ru/dead-github/issues/269
-                      caught */
+  mdbx_atomic_uint32_t incoherence; /* number of https://libmdbx.dqdkfa.ru/dead-github/issues/269
+                                       caught */
   mdbx_atomic_uint32_t reserved;
 
   /* Статистика для профилирования GC.
@@ -2828,8 +2677,7 @@ typedef struct shared_lck {
    * i.e. for sync-polling in the MDBX_NOMETASYNC mode. */
 #define MDBX_NOMETASYNC_LAZY_UNK (UINT32_MAX / 3)
 #define MDBX_NOMETASYNC_LAZY_FD (MDBX_NOMETASYNC_LAZY_UNK + UINT32_MAX / 8)
-#define MDBX_NOMETASYNC_LAZY_WRITEMAP                                          \
-  (MDBX_NOMETASYNC_LAZY_UNK - UINT32_MAX / 8)
+#define MDBX_NOMETASYNC_LAZY_WRITEMAP (MDBX_NOMETASYNC_LAZY_UNK - UINT32_MAX / 8)
   mdbx_atomic_uint32_t meta_sync_txnid;
 
   /* Period for timed auto-sync feature, i.e. at the every steady checkpoint
@@ -2903,12 +2751,10 @@ typedef struct shared_lck {
   reader_slot_t rdt[] /* dynamic size */;
 
 /* Lockfile format signature: version, features and field layout */
-#define MDBX_LOCK_FORMAT                                                       \
-  (MDBX_LCK_SIGN * 27733 + (unsigned)sizeof(reader_slot_t) * 13 +              \
-   (unsigned)offsetof(reader_slot_t, snapshot_pages_used) * 251 +              \
-   (unsigned)offsetof(lck_t, cached_oldest) * 83 +                             \
-   (unsigned)offsetof(lck_t, rdt_length) * 37 +                                \
-   (unsigned)offsetof(lck_t, rdt) * 29)
+#define MDBX_LOCK_FORMAT                                                                                               \
+  (MDBX_LCK_SIGN * 27733 + (unsigned)sizeof(reader_slot_t) * 13 +                                                      \
+   (unsigned)offsetof(reader_slot_t, snapshot_pages_used) * 251 + (unsigned)offsetof(lck_t, cached_oldest) * 83 +      \
+   (unsigned)offsetof(lck_t, rdt_length) * 37 + (unsigned)offsetof(lck_t, rdt) * 29)
 #endif /* FLEXIBLE_ARRAY_MEMBERS */
 } lck_t;
 
@@ -2970,27 +2816,18 @@ extern struct libmdbx_globals globals;
 extern struct libmdbx_imports imports;
 #endif /* Windows */
 
-
-
-
 #ifndef __Wpedantic_format_voidptr
-MDBX_MAYBE_UNUSED static inline const void *
-__Wpedantic_format_voidptr(const void *ptr) {
-  return ptr;
-}
+MDBX_MAYBE_UNUSED static inline const void *__Wpedantic_format_voidptr(const void *ptr) { return ptr; }
 #define __Wpedantic_format_voidptr(ARG) __Wpedantic_format_voidptr(ARG)
 #endif /* __Wpedantic_format_voidptr */
 
-MDBX_INTERNAL void MDBX_PRINTF_ARGS(4, 5)
-    debug_log(int level, const char *function, int line, const char *fmt, ...)
-        MDBX_PRINTF_ARGS(4, 5);
-MDBX_INTERNAL void debug_log_va(int level, const char *function, int line,
-                                const char *fmt, va_list args);
+MDBX_INTERNAL void MDBX_PRINTF_ARGS(4, 5) debug_log(int level, const char *function, int line, const char *fmt, ...)
+    MDBX_PRINTF_ARGS(4, 5);
+MDBX_INTERNAL void debug_log_va(int level, const char *function, int line, const char *fmt, va_list args);
 
 #if MDBX_DEBUG
 #define LOG_ENABLED(LVL) unlikely(LVL <= globals.loglevel)
-#define AUDIT_ENABLED()                                                        \
-  unlikely((globals.runtime_flags & (unsigned)MDBX_DBG_AUDIT))
+#define AUDIT_ENABLED() unlikely((globals.runtime_flags & (unsigned)MDBX_DBG_AUDIT))
 #else /* MDBX_DEBUG */
 #define LOG_ENABLED(LVL) (LVL < MDBX_LOG_VERBOSE && LVL <= globals.loglevel)
 #define AUDIT_ENABLED() (0)
@@ -2999,91 +2836,88 @@ MDBX_INTERNAL void debug_log_va(int level, const char *function, int line,
 #if MDBX_FORCE_ASSERTIONS
 #define ASSERT_ENABLED() (1)
 #elif MDBX_DEBUG
-#define ASSERT_ENABLED()                                                       \
-  likely((globals.runtime_flags & (unsigned)MDBX_DBG_ASSERT))
+#define ASSERT_ENABLED() likely((globals.runtime_flags & (unsigned)MDBX_DBG_ASSERT))
 #else
 #define ASSERT_ENABLED() (0)
 #endif /* ASSERT_ENABLED() */
 
-#define DEBUG_EXTRA(fmt, ...)                                                  \
-  do {                                                                         \
-    if (LOG_ENABLED(MDBX_LOG_EXTRA))                                           \
-      debug_log(MDBX_LOG_EXTRA, __func__, __LINE__, fmt, __VA_ARGS__);         \
+#define DEBUG_EXTRA(fmt, ...)                                                                                          \
+  do {                                                                                                                 \
+    if (LOG_ENABLED(MDBX_LOG_EXTRA))                                                                                   \
+      debug_log(MDBX_LOG_EXTRA, __func__, __LINE__, fmt, __VA_ARGS__);                                                 \
   } while (0)
 
-#define DEBUG_EXTRA_PRINT(fmt, ...)                                            \
-  do {                                                                         \
-    if (LOG_ENABLED(MDBX_LOG_EXTRA))                                           \
-      debug_log(MDBX_LOG_EXTRA, nullptr, 0, fmt, __VA_ARGS__);                 \
+#define DEBUG_EXTRA_PRINT(fmt, ...)                                                                                    \
+  do {                                                                                                                 \
+    if (LOG_ENABLED(MDBX_LOG_EXTRA))                                                                                   \
+      debug_log(MDBX_LOG_EXTRA, nullptr, 0, fmt, __VA_ARGS__);                                                         \
   } while (0)
 
-#define TRACE(fmt, ...)                                                        \
-  do {                                                                         \
-    if (LOG_ENABLED(MDBX_LOG_TRACE))                                           \
-      debug_log(MDBX_LOG_TRACE, __func__, __LINE__, fmt "\n", __VA_ARGS__);    \
+#define TRACE(fmt, ...)                                                                                                \
+  do {                                                                                                                 \
+    if (LOG_ENABLED(MDBX_LOG_TRACE))                                                                                   \
+      debug_log(MDBX_LOG_TRACE, __func__, __LINE__, fmt "\n", __VA_ARGS__);                                            \
   } while (0)
 
-#define DEBUG(fmt, ...)                                                        \
-  do {                                                                         \
-    if (LOG_ENABLED(MDBX_LOG_DEBUG))                                           \
-      debug_log(MDBX_LOG_DEBUG, __func__, __LINE__, fmt "\n", __VA_ARGS__);    \
+#define DEBUG(fmt, ...)                                                                                                \
+  do {                                                                                                                 \
+    if (LOG_ENABLED(MDBX_LOG_DEBUG))                                                                                   \
+      debug_log(MDBX_LOG_DEBUG, __func__, __LINE__, fmt "\n", __VA_ARGS__);                                            \
   } while (0)
 
-#define VERBOSE(fmt, ...)                                                      \
-  do {                                                                         \
-    if (LOG_ENABLED(MDBX_LOG_VERBOSE))                                         \
-      debug_log(MDBX_LOG_VERBOSE, __func__, __LINE__, fmt "\n", __VA_ARGS__);  \
+#define VERBOSE(fmt, ...)                                                                                              \
+  do {                                                                                                                 \
+    if (LOG_ENABLED(MDBX_LOG_VERBOSE))                                                                                 \
+      debug_log(MDBX_LOG_VERBOSE, __func__, __LINE__, fmt "\n", __VA_ARGS__);                                          \
   } while (0)
 
-#define NOTICE(fmt, ...)                                                       \
-  do {                                                                         \
-    if (LOG_ENABLED(MDBX_LOG_NOTICE))                                          \
-      debug_log(MDBX_LOG_NOTICE, __func__, __LINE__, fmt "\n", __VA_ARGS__);   \
+#define NOTICE(fmt, ...)                                                                                               \
+  do {                                                                                                                 \
+    if (LOG_ENABLED(MDBX_LOG_NOTICE))                                                                                  \
+      debug_log(MDBX_LOG_NOTICE, __func__, __LINE__, fmt "\n", __VA_ARGS__);                                           \
   } while (0)
 
-#define WARNING(fmt, ...)                                                      \
-  do {                                                                         \
-    if (LOG_ENABLED(MDBX_LOG_WARN))                                            \
-      debug_log(MDBX_LOG_WARN, __func__, __LINE__, fmt "\n", __VA_ARGS__);     \
+#define WARNING(fmt, ...)                                                                                              \
+  do {                                                                                                                 \
+    if (LOG_ENABLED(MDBX_LOG_WARN))                                                                                    \
+      debug_log(MDBX_LOG_WARN, __func__, __LINE__, fmt "\n", __VA_ARGS__);                                             \
   } while (0)
 
-#undef ERROR /* wingdi.h                                                       \
+#undef ERROR /* wingdi.h                                                                                               \
   Yeah, morons from M$ put such definition to the public header. */
 
-#define ERROR(fmt, ...)                                                        \
-  do {                                                                         \
-    if (LOG_ENABLED(MDBX_LOG_ERROR))                                           \
-      debug_log(MDBX_LOG_ERROR, __func__, __LINE__, fmt "\n", __VA_ARGS__);    \
+#define ERROR(fmt, ...)                                                                                                \
+  do {                                                                                                                 \
+    if (LOG_ENABLED(MDBX_LOG_ERROR))                                                                                   \
+      debug_log(MDBX_LOG_ERROR, __func__, __LINE__, fmt "\n", __VA_ARGS__);                                            \
   } while (0)
 
-#define FATAL(fmt, ...)                                                        \
-  debug_log(MDBX_LOG_FATAL, __func__, __LINE__, fmt "\n", __VA_ARGS__);
+#define FATAL(fmt, ...) debug_log(MDBX_LOG_FATAL, __func__, __LINE__, fmt "\n", __VA_ARGS__);
 
 #if MDBX_DEBUG
 #define ASSERT_FAIL(env, msg, func, line) mdbx_assert_fail(env, msg, func, line)
 #else /* MDBX_DEBUG */
-MDBX_NORETURN __cold void assert_fail(const char *msg, const char *func,
-                                      unsigned line);
-#define ASSERT_FAIL(env, msg, func, line)                                      \
-  do {                                                                         \
-    (void)(env);                                                               \
-    assert_fail(msg, func, line);                                              \
+MDBX_NORETURN __cold void assert_fail(const char *msg, const char *func, unsigned line);
+#define ASSERT_FAIL(env, msg, func, line)                                                                              \
+  do {                                                                                                                 \
+    (void)(env);                                                                                                       \
+    assert_fail(msg, func, line);                                                                                      \
   } while (0)
 #endif /* MDBX_DEBUG */
 
-#define ENSURE_MSG(env, expr, msg)                                             \
-  do {                                                                         \
-    if (unlikely(!(expr)))                                                     \
-      ASSERT_FAIL(env, msg, __func__, __LINE__);                               \
+#define ENSURE_MSG(env, expr, msg)                                                                                     \
+  do {                                                                                                                 \
+    if (unlikely(!(expr)))                                                                                             \
+      ASSERT_FAIL(env, msg, __func__, __LINE__);                                                                       \
   } while (0)
 
 #define ENSURE(env, expr) ENSURE_MSG(env, expr, #expr)
 
 /* assert(3) variant in environment context */
-#define eASSERT(env, expr)                                                     \
-  do {                                                                         \
-    if (ASSERT_ENABLED())                                                      \
-      ENSURE(env, expr);                                                       \
+#define eASSERT(env, expr)                                                                                             \
+  do {                                                                                                                 \
+    if (ASSERT_ENABLED())                                                                                              \
+      ENSURE(env, expr);                                                                                               \
   } while (0)
 
 /* assert(3) variant in cursor context */
@@ -3108,14 +2942,12 @@ MDBX_MAYBE_UNUSED static inline void jitter4testing(bool tiny) {
 
 MDBX_MAYBE_UNUSED MDBX_INTERNAL void page_list(page_t *mp);
 
-MDBX_INTERNAL const char *pagetype_caption(const uint8_t type,
-                                           char buf4unknown[16]);
+MDBX_INTERNAL const char *pagetype_caption(const uint8_t type, char buf4unknown[16]);
 /* Key size which fits in a DKBUF (debug key buffer). */
 #define DKBUF_MAX 127
 #define DKBUF char dbg_kbuf[DKBUF_MAX * 4 + 2]
 #define DKEY(x) mdbx_dump_val(x, dbg_kbuf, DKBUF_MAX * 2 + 1)
-#define DVAL(x)                                                                \
-  mdbx_dump_val(x, dbg_kbuf + DKBUF_MAX * 2 + 1, DKBUF_MAX * 2 + 1)
+#define DVAL(x) mdbx_dump_val(x, dbg_kbuf + DKBUF_MAX * 2 + 1, DKBUF_MAX * 2 + 1)
 
 #if MDBX_DEBUG
 #define DKBUF_DEBUG DKBUF
@@ -3127,7 +2959,15 @@ MDBX_INTERNAL const char *pagetype_caption(const uint8_t type,
 #define DVAL_DEBUG(x) ("-")
 #endif
 
+MDBX_INTERNAL void log_error(const int err, const char *func, unsigned line);
 
+MDBX_MAYBE_UNUSED static inline int log_if_error(const int err, const char *func, unsigned line) {
+  if (unlikely(err != MDBX_SUCCESS))
+    log_error(err, func, line);
+  return err;
+}
+
+#define LOG_IFERR(err) log_if_error((err), __func__, __LINE__)
 
 /* Test if the flags f are set in a flag word w. */
 #define F_ISSET(w, f) (((w) & (f)) == (f))
@@ -3153,46 +2993,36 @@ MDBX_INTERNAL const char *pagetype_caption(const uint8_t type,
 /* Pointer distance as signed number of bytes */
 #define ptr_dist(more, less) (((intptr_t)(more)) - ((intptr_t)(less)))
 
-#define MDBX_ASAN_POISON_MEMORY_REGION(addr, size)                             \
-  do {                                                                         \
-    TRACE("POISON_MEMORY_REGION(%p, %zu) at %u", (void *)(addr),               \
-          (size_t)(size), __LINE__);                                           \
-    ASAN_POISON_MEMORY_REGION(addr, size);                                     \
+#define MDBX_ASAN_POISON_MEMORY_REGION(addr, size)                                                                     \
+  do {                                                                                                                 \
+    TRACE("POISON_MEMORY_REGION(%p, %zu) at %u", (void *)(addr), (size_t)(size), __LINE__);                            \
+    ASAN_POISON_MEMORY_REGION(addr, size);                                                                             \
   } while (0)
 
-#define MDBX_ASAN_UNPOISON_MEMORY_REGION(addr, size)                           \
-  do {                                                                         \
-    TRACE("UNPOISON_MEMORY_REGION(%p, %zu) at %u", (void *)(addr),             \
-          (size_t)(size), __LINE__);                                           \
-    ASAN_UNPOISON_MEMORY_REGION(addr, size);                                   \
+#define MDBX_ASAN_UNPOISON_MEMORY_REGION(addr, size)                                                                   \
+  do {                                                                                                                 \
+    TRACE("UNPOISON_MEMORY_REGION(%p, %zu) at %u", (void *)(addr), (size_t)(size), __LINE__);                          \
+    ASAN_UNPOISON_MEMORY_REGION(addr, size);                                                                           \
   } while (0)
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_CONST_FUNCTION static inline size_t
-branchless_abs(intptr_t value) {
+MDBX_NOTHROW_CONST_FUNCTION MDBX_MAYBE_UNUSED static inline size_t branchless_abs(intptr_t value) {
   assert(value > INT_MIN);
-  const size_t expanded_sign =
-      (size_t)(value >> (sizeof(value) * CHAR_BIT - 1));
+  const size_t expanded_sign = (size_t)(value >> (sizeof(value) * CHAR_BIT - 1));
   return ((size_t)value + expanded_sign) ^ expanded_sign;
 }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_CONST_FUNCTION static inline bool
-is_powerof2(size_t x) {
-  return (x & (x - 1)) == 0;
-}
+MDBX_NOTHROW_CONST_FUNCTION MDBX_MAYBE_UNUSED static inline bool is_powerof2(size_t x) { return (x & (x - 1)) == 0; }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_CONST_FUNCTION static inline size_t
-floor_powerof2(size_t value, size_t granularity) {
+MDBX_NOTHROW_CONST_FUNCTION MDBX_MAYBE_UNUSED static inline size_t floor_powerof2(size_t value, size_t granularity) {
   assert(is_powerof2(granularity));
   return value & ~(granularity - 1);
 }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_CONST_FUNCTION static inline size_t
-ceil_powerof2(size_t value, size_t granularity) {
+MDBX_NOTHROW_CONST_FUNCTION MDBX_MAYBE_UNUSED static inline size_t ceil_powerof2(size_t value, size_t granularity) {
   return floor_powerof2(value + granularity - 1, granularity);
 }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_CONST_FUNCTION MDBX_INTERNAL unsigned
-log2n_powerof2(size_t value_uintptr);
+MDBX_NOTHROW_CONST_FUNCTION MDBX_MAYBE_UNUSED MDBX_INTERNAL unsigned log2n_powerof2(size_t value_uintptr);
 
 MDBX_NOTHROW_CONST_FUNCTION MDBX_INTERNAL uint64_t rrxmrrxmsx_0(uint64_t v);
 
@@ -3201,8 +3031,7 @@ struct monotime_cache {
   int expire_countdown;
 };
 
-MDBX_MAYBE_UNUSED static inline uint64_t
-monotime_since_cached(uint64_t begin_timestamp, struct monotime_cache *cache) {
+MDBX_MAYBE_UNUSED static inline uint64_t monotime_since_cached(uint64_t begin_timestamp, struct monotime_cache *cache) {
   if (cache->expire_countdown)
     cache->expire_countdown -= 1;
   else {
@@ -3211,9 +3040,6 @@ monotime_since_cached(uint64_t begin_timestamp, struct monotime_cache *cache) {
   }
   return cache->value - begin_timestamp;
 }
-
-
-
 
 /* An PNL is an Page Number List, a sorted array of IDs.
  *
@@ -3234,16 +3060,15 @@ typedef const pgno_t *const_pnl_t;
 
 #define MDBX_PNL_GRANULATE_LOG2 10
 #define MDBX_PNL_GRANULATE (1 << MDBX_PNL_GRANULATE_LOG2)
-#define MDBX_PNL_INITIAL                                                       \
-  (MDBX_PNL_GRANULATE - 2 - MDBX_ASSUME_MALLOC_OVERHEAD / sizeof(pgno_t))
+#define MDBX_PNL_INITIAL (MDBX_PNL_GRANULATE - 2 - MDBX_ASSUME_MALLOC_OVERHEAD / sizeof(pgno_t))
 
 #define MDBX_PNL_ALLOCLEN(pl) ((pl)[-1])
 #define MDBX_PNL_GETSIZE(pl) ((size_t)((pl)[0]))
-#define MDBX_PNL_SETSIZE(pl, size)                                             \
-  do {                                                                         \
-    const size_t __size = size;                                                \
-    assert(__size < INT_MAX);                                                  \
-    (pl)[0] = (pgno_t)__size;                                                  \
+#define MDBX_PNL_SETSIZE(pl, size)                                                                                     \
+  do {                                                                                                                 \
+    const size_t __size = size;                                                                                        \
+    assert(__size < INT_MAX);                                                                                          \
+    (pl)[0] = (pgno_t)__size;                                                                                          \
   } while (0)
 #define MDBX_PNL_FIRST(pl) ((pl)[1])
 #define MDBX_PNL_LAST(pl) ((pl)[MDBX_PNL_GETSIZE(pl)])
@@ -3270,13 +3095,10 @@ MDBX_MAYBE_UNUSED static inline size_t pnl_size2bytes(size_t size) {
   size += size;
 #endif /* MDBX_PNL_PREALLOC_FOR_RADIXSORT */
   STATIC_ASSERT(MDBX_ASSUME_MALLOC_OVERHEAD +
-                    (PAGELIST_LIMIT * (MDBX_PNL_PREALLOC_FOR_RADIXSORT + 1) +
-                     MDBX_PNL_GRANULATE + 3) *
-                        sizeof(pgno_t) <
+                    (PAGELIST_LIMIT * (MDBX_PNL_PREALLOC_FOR_RADIXSORT + 1) + MDBX_PNL_GRANULATE + 3) * sizeof(pgno_t) <
                 SIZE_MAX / 4 * 3);
   size_t bytes =
-      ceil_powerof2(MDBX_ASSUME_MALLOC_OVERHEAD + sizeof(pgno_t) * (size + 3),
-                    MDBX_PNL_GRANULATE * sizeof(pgno_t)) -
+      ceil_powerof2(MDBX_ASSUME_MALLOC_OVERHEAD + sizeof(pgno_t) * (size + 3), MDBX_PNL_GRANULATE * sizeof(pgno_t)) -
       MDBX_ASSUME_MALLOC_OVERHEAD;
   return bytes;
 }
@@ -3295,21 +3117,16 @@ MDBX_INTERNAL pnl_t pnl_alloc(size_t size);
 
 MDBX_INTERNAL void pnl_free(pnl_t pnl);
 
-MDBX_INTERNAL int pnl_reserve(pnl_t __restrict *__restrict ppnl,
-                              const size_t wanna);
+MDBX_INTERNAL int pnl_reserve(pnl_t __restrict *__restrict ppnl, const size_t wanna);
 
-MDBX_MAYBE_UNUSED static inline int __must_check_result
-pnl_need(pnl_t __restrict *__restrict ppnl, size_t num) {
-  assert(MDBX_PNL_GETSIZE(*ppnl) <= PAGELIST_LIMIT &&
-         MDBX_PNL_ALLOCLEN(*ppnl) >= MDBX_PNL_GETSIZE(*ppnl));
+MDBX_MAYBE_UNUSED static inline int __must_check_result pnl_need(pnl_t __restrict *__restrict ppnl, size_t num) {
+  assert(MDBX_PNL_GETSIZE(*ppnl) <= PAGELIST_LIMIT && MDBX_PNL_ALLOCLEN(*ppnl) >= MDBX_PNL_GETSIZE(*ppnl));
   assert(num <= PAGELIST_LIMIT);
   const size_t wanna = MDBX_PNL_GETSIZE(*ppnl) + num;
-  return likely(MDBX_PNL_ALLOCLEN(*ppnl) >= wanna) ? MDBX_SUCCESS
-                                                   : pnl_reserve(ppnl, wanna);
+  return likely(MDBX_PNL_ALLOCLEN(*ppnl) >= wanna) ? MDBX_SUCCESS : pnl_reserve(ppnl, wanna);
 }
 
-MDBX_MAYBE_UNUSED static inline void
-pnl_append_prereserved(__restrict pnl_t pnl, pgno_t pgno) {
+MDBX_MAYBE_UNUSED static inline void pnl_append_prereserved(__restrict pnl_t pnl, pgno_t pgno) {
   assert(MDBX_PNL_GETSIZE(pnl) < MDBX_PNL_ALLOCLEN(pnl));
   if (AUDIT_ENABLED()) {
     for (size_t i = MDBX_PNL_GETSIZE(pnl); i > 0; --i)
@@ -3321,14 +3138,11 @@ pnl_append_prereserved(__restrict pnl_t pnl, pgno_t pgno) {
 
 MDBX_INTERNAL void pnl_shrink(pnl_t __restrict *__restrict ppnl);
 
-MDBX_INTERNAL int __must_check_result spill_append_span(__restrict pnl_t *ppnl,
-                                                        pgno_t pgno, size_t n);
+MDBX_INTERNAL int __must_check_result spill_append_span(__restrict pnl_t *ppnl, pgno_t pgno, size_t n);
 
-MDBX_INTERNAL int __must_check_result pnl_append_span(__restrict pnl_t *ppnl,
-                                                      pgno_t pgno, size_t n);
+MDBX_INTERNAL int __must_check_result pnl_append_span(__restrict pnl_t *ppnl, pgno_t pgno, size_t n);
 
-MDBX_INTERNAL int __must_check_result pnl_insert_span(__restrict pnl_t *ppnl,
-                                                      pgno_t pgno, size_t n);
+MDBX_INTERNAL int __must_check_result pnl_insert_span(__restrict pnl_t *ppnl, pgno_t pgno, size_t n);
 
 MDBX_INTERNAL size_t pnl_search_nochk(const pnl_t pnl, pgno_t pgno);
 
@@ -3336,10 +3150,8 @@ MDBX_INTERNAL void pnl_sort_nochk(pnl_t pnl);
 
 MDBX_INTERNAL bool pnl_check(const const_pnl_t pnl, const size_t limit);
 
-MDBX_MAYBE_UNUSED static inline bool pnl_check_allocated(const const_pnl_t pnl,
-                                                         const size_t limit) {
-  return pnl == nullptr || (MDBX_PNL_ALLOCLEN(pnl) >= MDBX_PNL_GETSIZE(pnl) &&
-                            pnl_check(pnl, limit));
+MDBX_MAYBE_UNUSED static inline bool pnl_check_allocated(const const_pnl_t pnl, const size_t limit) {
+  return pnl == nullptr || (MDBX_PNL_ALLOCLEN(pnl) >= MDBX_PNL_GETSIZE(pnl) && pnl_check(pnl, limit));
 }
 
 MDBX_MAYBE_UNUSED static inline void pnl_sort(pnl_t pnl, size_t limit4check) {
@@ -3348,8 +3160,7 @@ MDBX_MAYBE_UNUSED static inline void pnl_sort(pnl_t pnl, size_t limit4check) {
   (void)limit4check;
 }
 
-MDBX_MAYBE_UNUSED static inline size_t pnl_search(const pnl_t pnl, pgno_t pgno,
-                                                  size_t limit) {
+MDBX_MAYBE_UNUSED static inline size_t pnl_search(const pnl_t pnl, pgno_t pgno, size_t limit) {
   assert(pnl_check_allocated(pnl, limit));
   if (MDBX_HAVE_CMOV) {
     /* cmov-ускоренный бинарный поиск может читать (но не использовать) один
@@ -3377,47 +3188,44 @@ MDBX_INTERNAL size_t pnl_merge(pnl_t dst, const pnl_t src);
 extern LIBMDBX_API const char *const mdbx_sourcery_anchor;
 #endif
 
-#define MDBX_IS_ERROR(rc)                                                      \
-  ((rc) != MDBX_RESULT_TRUE && (rc) != MDBX_RESULT_FALSE)
+#define MDBX_IS_ERROR(rc) ((rc) != MDBX_RESULT_TRUE && (rc) != MDBX_RESULT_FALSE)
 
 /*----------------------------------------------------------------------------*/
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_CONST_FUNCTION static inline pgno_t
-int64pgno(int64_t i64) {
+MDBX_NOTHROW_CONST_FUNCTION MDBX_MAYBE_UNUSED static inline pgno_t int64pgno(int64_t i64) {
   if (likely(i64 >= (int64_t)MIN_PAGENO && i64 <= (int64_t)MAX_PAGENO + 1))
     return (pgno_t)i64;
   return (i64 < (int64_t)MIN_PAGENO) ? MIN_PAGENO : MAX_PAGENO;
 }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_CONST_FUNCTION static inline pgno_t
-pgno_add(size_t base, size_t augend) {
+MDBX_NOTHROW_CONST_FUNCTION MDBX_MAYBE_UNUSED static inline pgno_t pgno_add(size_t base, size_t augend) {
   assert(base <= MAX_PAGENO + 1 && augend < MAX_PAGENO);
   return int64pgno((int64_t)base + (int64_t)augend);
 }
 
-MDBX_MAYBE_UNUSED MDBX_NOTHROW_CONST_FUNCTION static inline pgno_t
-pgno_sub(size_t base, size_t subtrahend) {
-  assert(base >= MIN_PAGENO && base <= MAX_PAGENO + 1 &&
-         subtrahend < MAX_PAGENO);
+MDBX_NOTHROW_CONST_FUNCTION MDBX_MAYBE_UNUSED static inline pgno_t pgno_sub(size_t base, size_t subtrahend) {
+  assert(base >= MIN_PAGENO && base <= MAX_PAGENO + 1 && subtrahend < MAX_PAGENO);
   return int64pgno((int64_t)base - (int64_t)subtrahend);
 }
 /// \copyright SPDX-License-Identifier: Apache-2.0
-/// \author Леонид Юрьев aka Leonid Yuriev <leo@yuriev.ru> \date 2020-2024
+/// \author Леонид Юрьев aka Leonid Yuriev <leo@yuriev.ru> \date 2020-2025
 ///
 /// \brief Non-inline part of the libmdbx C++ API
 ///
-
 
 #if !defined(MDBX_BUILD_CXX) || MDBX_BUILD_CXX != 1
 #error "Build is misconfigured! Expecting MDBX_BUILD_CXX=1 for C++ API."
 #endif /* MDBX_BUILD_CXX*/
 
 /* Workaround for MSVC' header `extern "C"` vs `std::` redefinition bug */
-#if defined(_MSC_VER) && defined(__SANITIZE_ADDRESS__) &&                      \
-    !defined(_DISABLE_VECTOR_ANNOTATION)
+#if defined(_MSC_VER)
+#if defined(__SANITIZE_ADDRESS__) && !defined(_DISABLE_VECTOR_ANNOTATION)
 #define _DISABLE_VECTOR_ANNOTATION
 #endif /* _DISABLE_VECTOR_ANNOTATION */
-
+#ifndef _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+#endif /* #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING */
+#endif /* _MSC_VER */
 
 #include <array>
 #include <atomic>
@@ -3460,8 +3268,8 @@ class trouble_location {
 #endif
 
 public:
-  MDBX_CXX11_CONSTEXPR trouble_location(unsigned line, const char *condition,
-                                   const char *function, const char *filename)
+  MDBX_CXX11_CONSTEXPR trouble_location(unsigned line, const char *condition, const char *function,
+                                        const char *filename)
       :
 #if TROUBLE_PROVIDE_LINENO
         line_(line)
@@ -3530,7 +3338,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-__cold  std::string format_va(const char *fmt, va_list ap) {
+__cold std::string format_va(const char *fmt, va_list ap) {
   va_list ones;
   va_copy(ones, ap);
 #ifdef _MSC_VER
@@ -3543,15 +3351,14 @@ __cold  std::string format_va(const char *fmt, va_list ap) {
   result.reserve(size_t(needed + 1));
   result.resize(size_t(needed), '\0');
   assert(int(result.capacity()) > needed);
-  int actual = vsnprintf(const_cast<char *>(result.data()), result.capacity(),
-                         fmt, ones);
+  int actual = vsnprintf(const_cast<char *>(result.data()), result.capacity(), fmt, ones);
   assert(actual == needed);
   (void)actual;
   va_end(ones);
   return result;
 }
 
-__cold  std::string format(const char *fmt, ...) {
+__cold std::string format(const char *fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
   std::string result = format_va(fmt, ap);
@@ -3572,33 +3379,29 @@ public:
   virtual ~bug() noexcept;
 };
 
-__cold  bug::bug(const trouble_location &location) noexcept
-    : std::runtime_error(format("mdbx.bug: %s.%s at %s:%u", location.function(),
-                                location.condition(), location.filename(),
-                                location.line())),
+__cold bug::bug(const trouble_location &location) noexcept
+    : std::runtime_error(format("mdbx.bug: %s.%s at %s:%u", location.function(), location.condition(),
+                                location.filename(), location.line())),
       location_(location) {}
 
-__cold  bug::~bug() noexcept {}
+__cold bug::~bug() noexcept {}
 
-[[noreturn]] __cold  void raise_bug(const trouble_location &what_and_where) {
-  throw bug(what_and_where);
-}
+[[maybe_unused, noreturn]] __cold void raise_bug(const trouble_location &what_and_where) { throw bug(what_and_where); }
 
-#define RAISE_BUG(line, condition, function, file)                             \
-  do {                                                                         \
-    static MDBX_CXX11_CONSTEXPR_VAR trouble_location bug(line, condition,      \
-                                                         function, file);      \
-    raise_bug(bug);                                                            \
+#define RAISE_BUG(line, condition, function, file)                                                                     \
+  do {                                                                                                                 \
+    static MDBX_CXX11_CONSTEXPR_VAR trouble_location bug(line, condition, function, file);                             \
+    raise_bug(bug);                                                                                                    \
   } while (0)
 
-#define ENSURE(condition)                                                      \
-  do                                                                           \
-    if (MDBX_UNLIKELY(!(condition)))                                           \
-      MDBX_CXX20_UNLIKELY RAISE_BUG(__LINE__, #condition, __func__, __FILE__); \
+#undef ENSURE
+#define ENSURE(condition)                                                                                              \
+  do                                                                                                                   \
+    if (MDBX_UNLIKELY(!(condition)))                                                                                   \
+      MDBX_CXX20_UNLIKELY RAISE_BUG(__LINE__, #condition, __func__, __FILE__);                                         \
   while (0)
 
-#define NOT_IMPLEMENTED()                                                      \
-  RAISE_BUG(__LINE__, "not_implemented", __func__, __FILE__);
+#define NOT_IMPLEMENTED() RAISE_BUG(__LINE__, "not_implemented", __func__, __FILE__);
 
 #endif /* Unused*/
 
@@ -3623,14 +3426,12 @@ struct line_wrapper {
   }
 };
 
-template <typename TYPE, unsigned INPLACE_BYTES = unsigned(sizeof(void *) * 64)>
-struct temp_buffer {
+template <typename TYPE, unsigned INPLACE_BYTES = unsigned(sizeof(void *) * 64)> struct temp_buffer {
   TYPE inplace[(INPLACE_BYTES + sizeof(TYPE) - 1) / sizeof(TYPE)];
   const size_t size;
   TYPE *const area;
   temp_buffer(size_t bytes)
-      : size((bytes + sizeof(TYPE) - 1) / sizeof(TYPE)),
-        area((bytes > sizeof(inplace)) ? new TYPE[size] : inplace) {
+      : size((bytes + sizeof(TYPE) - 1) / sizeof(TYPE)), area((bytes > sizeof(inplace)) ? new TYPE[size] : inplace) {
     memset(area, 0, sizeof(TYPE) * size);
   }
   ~temp_buffer() {
@@ -3662,8 +3463,7 @@ struct temp_buffer {
 namespace mdbx {
 
 [[noreturn]] __cold void throw_max_length_exceeded() {
-  throw std::length_error(
-      "mdbx:: Exceeded the maximal length of data/slice/buffer.");
+  throw std::length_error("mdbx:: Exceeded the maximal length of data/slice/buffer.");
 }
 
 [[noreturn]] __cold void throw_too_small_target_buffer() {
@@ -3676,38 +3476,31 @@ namespace mdbx {
 }
 
 [[noreturn]] __cold void throw_allocators_mismatch() {
-  throw std::logic_error(
-      "mdbx:: An allocators mismatch, so an object could not be transferred "
-      "into an incompatible memory allocation scheme.");
+  throw std::logic_error("mdbx:: An allocators mismatch, so an object could not be transferred "
+                         "into an incompatible memory allocation scheme.");
 }
 
 [[noreturn]] __cold void throw_incomparable_cursors() {
-  throw std::logic_error(
-      "mdbx:: incomparable and/or invalid cursors to compare positions.");
+  throw std::logic_error("mdbx:: incomparable and/or invalid cursors to compare positions.");
 }
 
-[[noreturn]] __cold void throw_bad_value_size() {
-  throw bad_value_size(MDBX_BAD_VALSIZE);
-}
+[[noreturn]] __cold void throw_bad_value_size() { throw bad_value_size(MDBX_BAD_VALSIZE); }
 
-__cold exception::exception(const ::mdbx::error &error) noexcept
-    : base(error.what()), error_(error) {}
+__cold exception::exception(const ::mdbx::error &error) noexcept : base(error.what()), error_(error) {}
 
 __cold exception::~exception() noexcept {}
 
 static std::atomic_int fatal_countdown;
 
-__cold fatal::fatal(const ::mdbx::error &error) noexcept : base(error) {
-  ++fatal_countdown;
-}
+__cold fatal::fatal(const ::mdbx::error &error) noexcept : base(error) { ++fatal_countdown; }
 
 __cold fatal::~fatal() noexcept {
   if (--fatal_countdown == 0)
     std::terminate();
 }
 
-#define DEFINE_EXCEPTION(NAME)                                                 \
-  __cold NAME::NAME(const ::mdbx::error &rc) : exception(rc) {}                \
+#define DEFINE_EXCEPTION(NAME)                                                                                         \
+  __cold NAME::NAME(const ::mdbx::error &rc) : exception(rc) {}                                                        \
   __cold NAME::~NAME() noexcept {}
 
 DEFINE_EXCEPTION(bad_map_id)
@@ -3749,8 +3542,8 @@ __cold const char *error::what() const noexcept {
     return mdbx_liberr2str(code());
 
   switch (code()) {
-#define ERROR_CASE(CODE)                                                       \
-  case CODE:                                                                   \
+#define ERROR_CASE(CODE)                                                                                               \
+  case CODE:                                                                                                           \
     return MDBX_STRINGIFY(CODE)
     ERROR_CASE(MDBX_ENODATA);
     ERROR_CASE(MDBX_EINVAL);
@@ -3776,8 +3569,7 @@ __cold std::string error::message() const {
   return std::string(msg ? msg : "unknown");
 }
 
-[[noreturn]] __cold void error::panic(const char *context,
-                                      const char *func) const noexcept {
+[[noreturn]] __cold void error::panic(const char *context, const char *func) const noexcept {
   assert(code() != MDBX_SUCCESS);
   ::mdbx_panic("mdbx::%s.%s(): \"%s\" (%d)", context, func, what(), code());
   std::terminate();
@@ -3786,7 +3578,7 @@ __cold std::string error::message() const {
 __cold void error::throw_exception() const {
   switch (code()) {
   case MDBX_EINVAL:
-    throw std::invalid_argument("mdbx");
+    throw std::invalid_argument("MDBX_EINVAL");
   case MDBX_ENOMEM:
     throw std::bad_alloc();
   case MDBX_SUCCESS:
@@ -3794,8 +3586,8 @@ __cold void error::throw_exception() const {
     throw std::logic_error("MDBX_SUCCESS (MDBX_RESULT_FALSE)");
   case MDBX_RESULT_TRUE:
     throw std::logic_error("MDBX_RESULT_TRUE");
-#define CASE_EXCEPTION(NAME, CODE)                                             \
-  case CODE:                                                                   \
+#define CASE_EXCEPTION(NAME, CODE)                                                                                     \
+  case CODE:                                                                                                           \
     throw NAME(code())
     CASE_EXCEPTION(bad_map_id, MDBX_BAD_DBI);
     CASE_EXCEPTION(bad_transaction, MDBX_BAD_TXN);
@@ -4099,27 +3891,23 @@ char *to_hex::write_bytes(char *__restrict const dest, size_t dest_size) const {
   return out;
 }
 
-char *from_hex::write_bytes(char *__restrict const dest,
-                            size_t dest_size) const {
+char *from_hex::write_bytes(char *__restrict const dest, size_t dest_size) const {
   if (MDBX_UNLIKELY(source.length() % 2 && !ignore_spaces))
-    MDBX_CXX20_UNLIKELY throw std::domain_error(
-        "mdbx::from_hex:: odd length of hexadecimal string");
+    MDBX_CXX20_UNLIKELY throw std::domain_error("mdbx::from_hex:: odd length of hexadecimal string");
   if (MDBX_UNLIKELY(envisage_result_length() > dest_size))
     MDBX_CXX20_UNLIKELY throw_too_small_target_buffer();
 
   auto ptr = dest;
   auto src = source.byte_ptr();
   for (auto left = source.length(); left > 0;) {
-    if (MDBX_UNLIKELY(*src <= ' ') &&
-        MDBX_LIKELY(ignore_spaces && isspace(*src))) {
+    if (MDBX_UNLIKELY(*src <= ' ') && MDBX_LIKELY(ignore_spaces && isspace(*src))) {
       ++src;
       --left;
       continue;
     }
 
     if (MDBX_UNLIKELY(left < 1 || !isxdigit(src[0]) || !isxdigit(src[1])))
-      MDBX_CXX20_UNLIKELY throw std::domain_error(
-          "mdbx::from_hex:: invalid hexadecimal string");
+      MDBX_CXX20_UNLIKELY throw std::domain_error("mdbx::from_hex:: invalid hexadecimal string");
 
     int8_t hi = src[0];
     hi = (hi | 0x20) - 'a';
@@ -4144,8 +3932,7 @@ bool from_hex::is_erroneous() const noexcept {
   bool got = false;
   auto src = source.byte_ptr();
   for (auto left = source.length(); left > 0;) {
-    if (MDBX_UNLIKELY(*src <= ' ') &&
-        MDBX_LIKELY(ignore_spaces && isspace(*src))) {
+    if (MDBX_UNLIKELY(*src <= ' ') && MDBX_LIKELY(ignore_spaces && isspace(*src))) {
       ++src;
       --left;
       continue;
@@ -4177,25 +3964,21 @@ using b58_uint = uint_fast32_t;
 #endif
 
 struct b58_buffer : public temp_buffer<b58_uint> {
-  b58_buffer(size_t bytes, size_t estimation_ratio_numerator,
-             size_t estimation_ratio_denominator, size_t extra = 0)
-      : temp_buffer((/* пересчитываем по указанной пропорции */
-                     bytes = (bytes * estimation_ratio_numerator +
-                              estimation_ratio_denominator - 1) /
-                             estimation_ratio_denominator,
-                     /* учитываем резервный старший байт в каждом слове */
-                     ((bytes + sizeof(b58_uint) - 2) / (sizeof(b58_uint) - 1) *
-                          sizeof(b58_uint) +
-                      extra) *
-                         sizeof(b58_uint))) {}
+  b58_buffer(size_t bytes, size_t estimation_ratio_numerator, size_t estimation_ratio_denominator, size_t extra = 0)
+      : temp_buffer(
+            (/* пересчитываем по указанной пропорции */
+             bytes =
+                 (bytes * estimation_ratio_numerator + estimation_ratio_denominator - 1) / estimation_ratio_denominator,
+             /* учитываем резервный старший байт в каждом слове */
+             ((bytes + sizeof(b58_uint) - 2) / (sizeof(b58_uint) - 1) * sizeof(b58_uint) + extra) * sizeof(b58_uint))) {
+  }
 };
 
 static byte b58_8to11(b58_uint &v) noexcept {
-  static const char b58_alphabet[58] = {
-      '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
-      'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-      'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm',
-      'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+  static const char b58_alphabet[58] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                                        'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+                                        'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm',
+                                        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
   const auto i = size_t(v % 58);
   v /= 58;
@@ -4204,9 +3987,8 @@ static byte b58_8to11(b58_uint &v) noexcept {
 
 static slice b58_encode(b58_buffer &buf, const byte *begin, const byte *end) {
   auto high = buf.end();
-  const auto modulo =
-      b58_uint((sizeof(b58_uint) > 4) ? UINT64_C(0x1A636A90B07A00) /* 58^9 */
-                                      : UINT32_C(0xACAD10) /* 58^4 */);
+  const auto modulo = b58_uint((sizeof(b58_uint) > 4) ? UINT64_C(0x1A636A90B07A00) /* 58^9 */
+                                                      : UINT32_C(0xACAD10) /* 58^4 */);
   static_assert(sizeof(modulo) == 4 || sizeof(modulo) == 8, "WTF?");
   while (begin < end) {
     b58_uint carry = *begin++;
@@ -4252,8 +4034,7 @@ static slice b58_encode(b58_buffer &buf, const byte *begin, const byte *end) {
   return slice(output, ptr);
 }
 
-char *to_base58::write_bytes(char *__restrict const dest,
-                             size_t dest_size) const {
+char *to_base58::write_bytes(char *__restrict const dest, size_t dest_size) const {
   if (MDBX_UNLIKELY(envisage_result_length() > dest_size))
     MDBX_CXX20_UNLIKELY throw_too_small_target_buffer();
 
@@ -4324,8 +4105,7 @@ const signed char b58_map[256] = {
     IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL  // f0
 };
 
-static slice b58_decode(b58_buffer &buf, const byte *begin, const byte *end,
-                        bool ignore_spaces) {
+static slice b58_decode(b58_buffer &buf, const byte *begin, const byte *end, bool ignore_spaces) {
   auto high = buf.end();
   while (begin < end) {
     const auto c = b58_map[*begin++];
@@ -4366,8 +4146,7 @@ static slice b58_decode(b58_buffer &buf, const byte *begin, const byte *end,
   return slice(output, ptr);
 }
 
-char *from_base58::write_bytes(char *__restrict const dest,
-                               size_t dest_size) const {
+char *from_base58::write_bytes(char *__restrict const dest, size_t dest_size) const {
   if (MDBX_UNLIKELY(envisage_result_length() > dest_size))
     MDBX_CXX20_UNLIKELY throw_too_small_target_buffer();
 
@@ -4393,8 +4172,7 @@ bool from_base58::is_erroneous() const noexcept {
   auto begin = source.byte_ptr();
   auto const end = source.end_byte_ptr();
   while (begin < end) {
-    if (MDBX_UNLIKELY(b58_map[*begin] < 0 &&
-                      !(ignore_spaces && isspace(*begin))))
+    if (MDBX_UNLIKELY(b58_map[*begin] < 0 && !(ignore_spaces && isspace(*begin))))
       return true;
     ++begin;
   }
@@ -4403,22 +4181,18 @@ bool from_base58::is_erroneous() const noexcept {
 
 //------------------------------------------------------------------------------
 
-static inline void b64_3to4(const byte x, const byte y, const byte z,
-                            char *__restrict dest) noexcept {
-  static const byte alphabet[64] = {
-      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-      'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-      'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
+static inline void b64_3to4(const byte x, const byte y, const byte z, char *__restrict dest) noexcept {
+  static const byte alphabet[64] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+                                    'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+                                    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+                                    'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
   dest[0] = alphabet[(x & 0xfc) >> 2];
   dest[1] = alphabet[((x & 0x03) << 4) + ((y & 0xf0) >> 4)];
   dest[2] = alphabet[((y & 0x0f) << 2) + ((z & 0xc0) >> 6)];
   dest[3] = alphabet[z & 0x3f];
 }
 
-char *to_base64::write_bytes(char *__restrict const dest,
-                             size_t dest_size) const {
+char *to_base64::write_bytes(char *__restrict const dest, size_t dest_size) const {
   if (MDBX_UNLIKELY(envisage_result_length() > dest_size))
     MDBX_CXX20_UNLIKELY throw_too_small_target_buffer();
 
@@ -4512,8 +4286,7 @@ static const signed char b64_map[256] = {
     IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL, IL  // f0
 };
 
-static inline signed char b64_4to3(signed char a, signed char b, signed char c,
-                                   signed char d,
+static inline signed char b64_4to3(signed char a, signed char b, signed char c, signed char d,
                                    char *__restrict dest) noexcept {
   dest[0] = byte((a << 2) + ((b & 0x30) >> 4));
   dest[1] = byte(((b & 0xf) << 4) + ((c & 0x3c) >> 2));
@@ -4521,19 +4294,16 @@ static inline signed char b64_4to3(signed char a, signed char b, signed char c,
   return a | b | c | d;
 }
 
-char *from_base64::write_bytes(char *__restrict const dest,
-                               size_t dest_size) const {
+char *from_base64::write_bytes(char *__restrict const dest, size_t dest_size) const {
   if (MDBX_UNLIKELY(source.length() % 4 && !ignore_spaces))
-    MDBX_CXX20_UNLIKELY throw std::domain_error(
-        "mdbx::from_base64:: odd length of base64 string");
+    MDBX_CXX20_UNLIKELY throw std::domain_error("mdbx::from_base64:: odd length of base64 string");
   if (MDBX_UNLIKELY(envisage_result_length() > dest_size))
     MDBX_CXX20_UNLIKELY throw_too_small_target_buffer();
 
   auto ptr = dest;
   auto src = source.byte_ptr();
   for (auto left = source.length(); left > 0;) {
-    if (MDBX_UNLIKELY(*src <= ' ') &&
-        MDBX_LIKELY(ignore_spaces && isspace(*src))) {
+    if (MDBX_UNLIKELY(*src <= ' ') && MDBX_LIKELY(ignore_spaces && isspace(*src))) {
       ++src;
       --left;
       continue;
@@ -4544,8 +4314,7 @@ char *from_base64::write_bytes(char *__restrict const dest,
       bailout:
         throw std::domain_error("mdbx::from_base64:: invalid base64 string");
       }
-    const signed char a = b64_map[src[0]], b = b64_map[src[1]],
-                      c = b64_map[src[2]], d = b64_map[src[3]];
+    const signed char a = b64_map[src[0]], b = b64_map[src[1]], c = b64_map[src[2]], d = b64_map[src[3]];
     if (MDBX_UNLIKELY(b64_4to3(a, b, c, d, ptr) < 0)) {
       if (left == 4 && (a | b) >= 0 && d == EQ) {
         if (c >= 0) {
@@ -4574,8 +4343,7 @@ bool from_base64::is_erroneous() const noexcept {
   bool got = false;
   auto src = source.byte_ptr();
   for (auto left = source.length(); left > 0;) {
-    if (MDBX_UNLIKELY(*src <= ' ') &&
-        MDBX_LIKELY(ignore_spaces && isspace(*src))) {
+    if (MDBX_UNLIKELY(*src <= ' ') && MDBX_LIKELY(ignore_spaces && isspace(*src))) {
       ++src;
       --left;
       continue;
@@ -4583,8 +4351,7 @@ bool from_base64::is_erroneous() const noexcept {
 
     if (MDBX_UNLIKELY(left < 3))
       MDBX_CXX20_UNLIKELY return false;
-    const signed char a = b64_map[src[0]], b = b64_map[src[1]],
-                      c = b64_map[src[2]], d = b64_map[src[3]];
+    const signed char a = b64_map[src[0]], b = b64_map[src[1]], c = b64_map[src[2]], d = b64_map[src[3]];
     if (MDBX_UNLIKELY((a | b | c | d) < 0))
       MDBX_CXX20_UNLIKELY {
         if (left == 4 && (a | b) >= 0 && d == EQ && (c >= 0 || c == d))
@@ -4600,12 +4367,31 @@ bool from_base64::is_erroneous() const noexcept {
 
 //------------------------------------------------------------------------------
 
-template class LIBMDBX_API_TYPE buffer<legacy_allocator>;
+#if defined(_MSC_VER)
+#pragma warning(push)
+/* warning C4251: 'mdbx::buffer<...>::silo_':
+ *   struct 'mdbx::buffer<..>::silo' needs to have dll-interface to be used by clients of class 'mdbx::buffer<...>'
+ *
+ * Microsoft не хочет признавать ошибки и пересматривать приятные решения, поэтому MSVC продолжает кошмарить
+ * и стращать разработчиков предупреждениями, тем самым перекладывая ответственность на их плечи.
+ *
+ * В данном случае предупреждение выдаётся из-за инстанцирования std::string::allocator_type::pointer и
+ * std::pmr::string::allocator_type::pointer внутри mdbx::buffer<..>::silo. А так как эти типы являются частью
+ * стандартной библиотеки C++ они всегда будут доступны и без необходимости их инстанцирования и экспорта из libmdbx.
+ *
+ * Поэтому нет других вариантов как заглушить это предупреждение и еще раз плюнуть в сторону microsoft. */
+#pragma warning(disable : 4251)
+#endif /* MSVC */
 
-#if defined(__cpp_lib_memory_resource) &&                                      \
-    __cpp_lib_memory_resource >= 201603L && _GLIBCXX_USE_CXX11_ABI
-template class LIBMDBX_API_TYPE buffer<polymorphic_allocator>;
+MDBX_INSTALL_API_TEMPLATE(LIBMDBX_API_TYPE, buffer<legacy_allocator>);
+
+#if defined(__cpp_lib_memory_resource) && __cpp_lib_memory_resource >= 201603L && _GLIBCXX_USE_CXX11_ABI
+MDBX_INSTALL_API_TEMPLATE(LIBMDBX_API_TYPE, buffer<polymorphic_allocator>);
 #endif /* __cpp_lib_memory_resource >= 201603L */
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif /* MSVC */
 
 //------------------------------------------------------------------------------
 
@@ -4622,8 +4408,7 @@ static inline MDBX_env_flags_t mode2flags(env::mode mode) {
   }
 }
 
-__cold MDBX_env_flags_t
-env::operate_parameters::make_flags(bool accede, bool use_subdirectory) const {
+__cold MDBX_env_flags_t env::operate_parameters::make_flags(bool accede, bool use_subdirectory) const {
   MDBX_env_flags_t flags = mode2flags(mode);
   if (accede)
     flags |= MDBX_ACCEDE;
@@ -4649,8 +4434,7 @@ env::operate_parameters::make_flags(bool accede, bool use_subdirectory) const {
       flags |= MDBX_LIFORECLAIM;
     switch (durability) {
     default:
-      MDBX_CXX20_UNLIKELY throw std::invalid_argument(
-          "db::durability is invalid");
+      MDBX_CXX20_UNLIKELY throw std::invalid_argument("db::durability is invalid");
     case env::durability::robust_synchronous:
       break;
     case env::durability::half_synchronous_weak_last:
@@ -4668,16 +4452,13 @@ env::operate_parameters::make_flags(bool accede, bool use_subdirectory) const {
   return flags;
 }
 
-env::mode
-env::operate_parameters::mode_from_flags(MDBX_env_flags_t flags) noexcept {
+env::mode env::operate_parameters::mode_from_flags(MDBX_env_flags_t flags) noexcept {
   if (flags & MDBX_RDONLY)
     return env::mode::readonly;
-  return (flags & MDBX_WRITEMAP) ? env::mode::write_mapped_io
-                                 : env::mode::write_file_io;
+  return (flags & MDBX_WRITEMAP) ? env::mode::write_mapped_io : env::mode::write_file_io;
 }
 
-env::durability env::operate_parameters::durability_from_flags(
-    MDBX_env_flags_t flags) noexcept {
+env::durability env::operate_parameters::durability_from_flags(MDBX_env_flags_t flags) noexcept {
   if ((flags & MDBX_UTTERLY_NOSYNC) == MDBX_UTTERLY_NOSYNC)
     return env::durability::whole_fragile;
   if (flags & MDBX_SAFE_NOSYNC)
@@ -4688,71 +4469,51 @@ env::durability env::operate_parameters::durability_from_flags(
 }
 
 env::reclaiming_options::reclaiming_options(MDBX_env_flags_t flags) noexcept
-    : lifo((flags & MDBX_LIFORECLAIM) ? true : false),
-      coalesce((flags & MDBX_COALESCE) ? true : false) {}
+    : lifo((flags & MDBX_LIFORECLAIM) ? true : false), coalesce((flags & MDBX_COALESCE) ? true : false) {}
 
 env::operate_options::operate_options(MDBX_env_flags_t flags) noexcept
-    : no_sticky_threads(((flags & (MDBX_NOSTICKYTHREADS | MDBX_EXCLUSIVE)) ==
-                         MDBX_NOSTICKYTHREADS)
-                            ? true
-                            : false),
-      nested_write_transactions((flags & (MDBX_WRITEMAP | MDBX_RDONLY)) ? false
-                                                                        : true),
-      exclusive((flags & MDBX_EXCLUSIVE) ? true : false),
-      disable_readahead((flags & MDBX_NORDAHEAD) ? true : false),
+    : no_sticky_threads(((flags & (MDBX_NOSTICKYTHREADS | MDBX_EXCLUSIVE)) == MDBX_NOSTICKYTHREADS) ? true : false),
+      nested_write_transactions((flags & (MDBX_WRITEMAP | MDBX_RDONLY)) ? false : true),
+      exclusive((flags & MDBX_EXCLUSIVE) ? true : false), disable_readahead((flags & MDBX_NORDAHEAD) ? true : false),
       disable_clear_memory((flags & MDBX_NOMEMINIT) ? true : false) {}
 
-bool env::is_pristine() const {
-  return get_stat().ms_mod_txnid == 0 &&
-         get_info().mi_recent_txnid == INITIAL_TXNID;
-}
+bool env::is_pristine() const { return get_stat().ms_mod_txnid == 0 && get_info().mi_recent_txnid == INITIAL_TXNID; }
 
 bool env::is_empty() const { return get_stat().ms_leaf_pages == 0; }
 
 __cold env &env::copy(filehandle fd, bool compactify, bool force_dynamic_size) {
-  error::success_or_throw(
-      ::mdbx_env_copy2fd(handle_, fd,
-                         (compactify ? MDBX_CP_COMPACT : MDBX_CP_DEFAULTS) |
-                             (force_dynamic_size ? MDBX_CP_FORCE_DYNAMIC_SIZE
-                                                 : MDBX_CP_DEFAULTS)));
+  error::success_or_throw(::mdbx_env_copy2fd(handle_, fd,
+                                             (compactify ? MDBX_CP_COMPACT : MDBX_CP_DEFAULTS) |
+                                                 (force_dynamic_size ? MDBX_CP_FORCE_DYNAMIC_SIZE : MDBX_CP_DEFAULTS)));
   return *this;
 }
 
-__cold env &env::copy(const char *destination, bool compactify,
-                      bool force_dynamic_size) {
-  error::success_or_throw(
-      ::mdbx_env_copy(handle_, destination,
-                      (compactify ? MDBX_CP_COMPACT : MDBX_CP_DEFAULTS) |
-                          (force_dynamic_size ? MDBX_CP_FORCE_DYNAMIC_SIZE
-                                              : MDBX_CP_DEFAULTS)));
+__cold env &env::copy(const char *destination, bool compactify, bool force_dynamic_size) {
+  error::success_or_throw(::mdbx_env_copy(handle_, destination,
+                                          (compactify ? MDBX_CP_COMPACT : MDBX_CP_DEFAULTS) |
+                                              (force_dynamic_size ? MDBX_CP_FORCE_DYNAMIC_SIZE : MDBX_CP_DEFAULTS)));
   return *this;
 }
 
-__cold env &env::copy(const ::std::string &destination, bool compactify,
-                      bool force_dynamic_size) {
+__cold env &env::copy(const ::std::string &destination, bool compactify, bool force_dynamic_size) {
   return copy(destination.c_str(), compactify, force_dynamic_size);
 }
 
 #if defined(_WIN32) || defined(_WIN64)
-__cold env &env::copy(const wchar_t *destination, bool compactify,
-                      bool force_dynamic_size) {
-  error::success_or_throw(
-      ::mdbx_env_copyW(handle_, destination,
-                       (compactify ? MDBX_CP_COMPACT : MDBX_CP_DEFAULTS) |
-                           (force_dynamic_size ? MDBX_CP_FORCE_DYNAMIC_SIZE
-                                               : MDBX_CP_DEFAULTS)));
+__cold env &env::copy(const wchar_t *destination, bool compactify, bool force_dynamic_size) {
+  error::success_or_throw(::mdbx_env_copyW(handle_, destination,
+                                           (compactify ? MDBX_CP_COMPACT : MDBX_CP_DEFAULTS) |
+                                               (force_dynamic_size ? MDBX_CP_FORCE_DYNAMIC_SIZE : MDBX_CP_DEFAULTS)));
   return *this;
 }
 
-env &env::copy(const ::std::wstring &destination, bool compactify,
-               bool force_dynamic_size) {
+env &env::copy(const ::std::wstring &destination, bool compactify, bool force_dynamic_size) {
   return copy(destination.c_str(), compactify, force_dynamic_size);
 }
 #endif /* Windows */
 
 #ifdef MDBX_STD_FILESYSTEM_PATH
-__cold env &env::copy(const MDBX_STD_FILESYSTEM_PATH &destination,
-                      bool compactify, bool force_dynamic_size) {
+__cold env &env::copy(const MDBX_STD_FILESYSTEM_PATH &destination, bool compactify, bool force_dynamic_size) {
   return copy(destination.native(), compactify, force_dynamic_size);
 }
 #endif /* MDBX_STD_FILESYSTEM_PATH */
@@ -4772,8 +4533,7 @@ __cold path env::get_path() const {
 }
 
 __cold bool env::remove(const char *pathname, const remove_mode mode) {
-  return !error::boolean_or_throw(
-      ::mdbx_env_delete(pathname, MDBX_env_delete_mode_t(mode)));
+  return !error::boolean_or_throw(::mdbx_env_delete(pathname, MDBX_env_delete_mode_t(mode)));
 }
 
 __cold bool env::remove(const ::std::string &pathname, const remove_mode mode) {
@@ -4782,19 +4542,16 @@ __cold bool env::remove(const ::std::string &pathname, const remove_mode mode) {
 
 #if defined(_WIN32) || defined(_WIN64)
 __cold bool env::remove(const wchar_t *pathname, const remove_mode mode) {
-  return !error::boolean_or_throw(
-      ::mdbx_env_deleteW(pathname, MDBX_env_delete_mode_t(mode)));
+  return !error::boolean_or_throw(::mdbx_env_deleteW(pathname, MDBX_env_delete_mode_t(mode)));
 }
 
-__cold bool env::remove(const ::std::wstring &pathname,
-                        const remove_mode mode) {
+__cold bool env::remove(const ::std::wstring &pathname, const remove_mode mode) {
   return remove(pathname.c_str(), mode);
 }
 #endif /* Windows */
 
 #ifdef MDBX_STD_FILESYSTEM_PATH
-__cold bool env::remove(const MDBX_STD_FILESYSTEM_PATH &pathname,
-                        const remove_mode mode) {
+__cold bool env::remove(const MDBX_STD_FILESYSTEM_PATH &pathname, const remove_mode mode) {
   return remove(pathname.native(), mode);
 }
 #endif /* MDBX_STD_FILESYSTEM_PATH */
@@ -4810,13 +4567,11 @@ static inline MDBX_env *create_env() {
 
 __cold env_managed::~env_managed() noexcept {
   if (MDBX_UNLIKELY(handle_))
-    MDBX_CXX20_UNLIKELY error::success_or_panic(
-        ::mdbx_env_close(handle_), "mdbx::~env()", "mdbx_env_close");
+    MDBX_CXX20_UNLIKELY error::success_or_panic(::mdbx_env_close(handle_), "mdbx::~env()", "mdbx_env_close");
 }
 
 __cold void env_managed::close(bool dont_sync) {
-  const error rc =
-      static_cast<MDBX_error_t>(::mdbx_env_close_ex(handle_, dont_sync));
+  const error rc = static_cast<MDBX_error_t>(::mdbx_env_close_ex(handle_, dont_sync));
   switch (rc.code()) {
   case MDBX_EBADSIGN:
     MDBX_CXX20_UNLIKELY handle_ = nullptr;
@@ -4835,87 +4590,69 @@ __cold void env_managed::setup(unsigned max_maps, unsigned max_readers) {
     error::success_or_throw(::mdbx_env_set_maxdbs(handle_, max_maps));
 }
 
-__cold env_managed::env_managed(const char *pathname,
-                                const operate_parameters &op, bool accede)
+__cold env_managed::env_managed(const char *pathname, const operate_parameters &op, bool accede)
     : env_managed(create_env()) {
   setup(op.max_maps, op.max_readers);
-  error::success_or_throw(
-      ::mdbx_env_open(handle_, pathname, op.make_flags(accede), 0));
+  error::success_or_throw(::mdbx_env_open(handle_, pathname, op.make_flags(accede), 0));
 
-  if (op.options.nested_write_transactions &&
-      !get_options().nested_write_transactions)
+  if (op.options.nested_write_transactions && !get_options().nested_write_transactions)
     MDBX_CXX20_UNLIKELY error::throw_exception(MDBX_INCOMPATIBLE);
 }
 
-__cold env_managed::env_managed(const char *pathname,
-                                const env_managed::create_parameters &cp,
+__cold env_managed::env_managed(const char *pathname, const env_managed::create_parameters &cp,
                                 const env::operate_parameters &op, bool accede)
     : env_managed(create_env()) {
   setup(op.max_maps, op.max_readers);
   set_geometry(cp.geometry);
-  error::success_or_throw(::mdbx_env_open(
-      handle_, pathname, op.make_flags(accede, cp.use_subdirectory),
-      cp.file_mode_bits));
+  error::success_or_throw(
+      ::mdbx_env_open(handle_, pathname, op.make_flags(accede, cp.use_subdirectory), cp.file_mode_bits));
 
-  if (op.options.nested_write_transactions &&
-      !get_options().nested_write_transactions)
+  if (op.options.nested_write_transactions && !get_options().nested_write_transactions)
     MDBX_CXX20_UNLIKELY error::throw_exception(MDBX_INCOMPATIBLE);
 }
 
-__cold env_managed::env_managed(const ::std::string &pathname,
-                                const operate_parameters &op, bool accede)
+__cold env_managed::env_managed(const ::std::string &pathname, const operate_parameters &op, bool accede)
     : env_managed(pathname.c_str(), op, accede) {}
 
-__cold env_managed::env_managed(const ::std::string &pathname,
-                                const env_managed::create_parameters &cp,
+__cold env_managed::env_managed(const ::std::string &pathname, const env_managed::create_parameters &cp,
                                 const env::operate_parameters &op, bool accede)
     : env_managed(pathname.c_str(), cp, op, accede) {}
 
 #if defined(_WIN32) || defined(_WIN64)
-__cold env_managed::env_managed(const wchar_t *pathname,
-                                const operate_parameters &op, bool accede)
+__cold env_managed::env_managed(const wchar_t *pathname, const operate_parameters &op, bool accede)
     : env_managed(create_env()) {
   setup(op.max_maps, op.max_readers);
-  error::success_or_throw(
-      ::mdbx_env_openW(handle_, pathname, op.make_flags(accede), 0));
+  error::success_or_throw(::mdbx_env_openW(handle_, pathname, op.make_flags(accede), 0));
 
-  if (op.options.nested_write_transactions &&
-      !get_options().nested_write_transactions)
+  if (op.options.nested_write_transactions && !get_options().nested_write_transactions)
     MDBX_CXX20_UNLIKELY error::throw_exception(MDBX_INCOMPATIBLE);
 }
 
-__cold env_managed::env_managed(const wchar_t *pathname,
-                                const env_managed::create_parameters &cp,
+__cold env_managed::env_managed(const wchar_t *pathname, const env_managed::create_parameters &cp,
                                 const env::operate_parameters &op, bool accede)
     : env_managed(create_env()) {
   setup(op.max_maps, op.max_readers);
   set_geometry(cp.geometry);
-  error::success_or_throw(::mdbx_env_openW(
-      handle_, pathname, op.make_flags(accede, cp.use_subdirectory),
-      cp.file_mode_bits));
+  error::success_or_throw(
+      ::mdbx_env_openW(handle_, pathname, op.make_flags(accede, cp.use_subdirectory), cp.file_mode_bits));
 
-  if (op.options.nested_write_transactions &&
-      !get_options().nested_write_transactions)
+  if (op.options.nested_write_transactions && !get_options().nested_write_transactions)
     MDBX_CXX20_UNLIKELY error::throw_exception(MDBX_INCOMPATIBLE);
 }
 
-__cold env_managed::env_managed(const ::std::wstring &pathname,
-                                const operate_parameters &op, bool accede)
+__cold env_managed::env_managed(const ::std::wstring &pathname, const operate_parameters &op, bool accede)
     : env_managed(pathname.c_str(), op, accede) {}
 
-__cold env_managed::env_managed(const ::std::wstring &pathname,
-                                const env_managed::create_parameters &cp,
+__cold env_managed::env_managed(const ::std::wstring &pathname, const env_managed::create_parameters &cp,
                                 const env::operate_parameters &op, bool accede)
     : env_managed(pathname.c_str(), cp, op, accede) {}
 #endif /* Windows */
 
 #ifdef MDBX_STD_FILESYSTEM_PATH
-__cold env_managed::env_managed(const MDBX_STD_FILESYSTEM_PATH &pathname,
-                                const operate_parameters &op, bool accede)
+__cold env_managed::env_managed(const MDBX_STD_FILESYSTEM_PATH &pathname, const operate_parameters &op, bool accede)
     : env_managed(pathname.native(), op, accede) {}
 
-__cold env_managed::env_managed(const MDBX_STD_FILESYSTEM_PATH &pathname,
-                                const env_managed::create_parameters &cp,
+__cold env_managed::env_managed(const MDBX_STD_FILESYSTEM_PATH &pathname, const env_managed::create_parameters &cp,
                                 const env::operate_parameters &op, bool accede)
     : env_managed(pathname.native(), cp, op, accede) {}
 #endif /* MDBX_STD_FILESYSTEM_PATH */
@@ -4925,16 +4662,14 @@ __cold env_managed::env_managed(const MDBX_STD_FILESYSTEM_PATH &pathname,
 txn_managed txn::start_nested() {
   MDBX_txn *nested;
   error::throw_on_nullptr(handle_, MDBX_BAD_TXN);
-  error::success_or_throw(::mdbx_txn_begin(mdbx_txn_env(handle_), handle_,
-                                           MDBX_TXN_READWRITE, &nested));
+  error::success_or_throw(::mdbx_txn_begin(mdbx_txn_env(handle_), handle_, MDBX_TXN_READWRITE, &nested));
   assert(nested != nullptr);
   return txn_managed(nested);
 }
 
 txn_managed::~txn_managed() noexcept {
   if (MDBX_UNLIKELY(handle_))
-    MDBX_CXX20_UNLIKELY error::success_or_panic(::mdbx_txn_abort(handle_),
-                                                "mdbx::~txn", "mdbx_txn_abort");
+    MDBX_CXX20_UNLIKELY error::success_or_panic(::mdbx_txn_abort(handle_), "mdbx::~txn", "mdbx_txn_abort");
 }
 
 void txn_managed::abort() {
@@ -4954,8 +4689,7 @@ void txn_managed::commit() {
 }
 
 void txn_managed::commit(commit_latency *latency) {
-  const error err =
-      static_cast<MDBX_error_t>(::mdbx_txn_commit_ex(handle_, latency));
+  const error err = static_cast<MDBX_error_t>(::mdbx_txn_commit_ex(handle_, latency));
   if (MDBX_LIKELY(err.code() != MDBX_THREAD_MISMATCH))
     MDBX_CXX20_LIKELY handle_ = nullptr;
   if (MDBX_UNLIKELY(err.code() != MDBX_SUCCESS))
@@ -4965,8 +4699,7 @@ void txn_managed::commit(commit_latency *latency) {
 void txn_managed::commit_embark_read() {
   auto env = this->env();
   commit();
-  error::success_or_throw(
-      ::mdbx_txn_begin(env, nullptr, MDBX_TXN_RDONLY, &handle_));
+  error::success_or_throw(::mdbx_txn_begin(env, nullptr, MDBX_TXN_RDONLY, &handle_));
 }
 
 //------------------------------------------------------------------------------
@@ -5005,8 +4738,7 @@ __cold bool txn::clear_map(const char *name, bool throw_if_absent) {
   }
 }
 
-__cold bool txn::rename_map(const char *old_name, const char *new_name,
-                            bool throw_if_absent) {
+__cold bool txn::rename_map(const char *old_name, const char *new_name, bool throw_if_absent) {
   map_handle map;
   const int err = ::mdbx_dbi_open(handle_, old_name, MDBX_DB_ACCEDE, &map.dbi);
   switch (err) {
@@ -5057,9 +4789,7 @@ __cold bool txn::clear_map(const ::mdbx::slice &name, bool throw_if_absent) {
   }
 }
 
-__cold bool txn::rename_map(const ::mdbx::slice &old_name,
-                            const ::mdbx::slice &new_name,
-                            bool throw_if_absent) {
+__cold bool txn::rename_map(const ::mdbx::slice &old_name, const ::mdbx::slice &new_name, bool throw_if_absent) {
   map_handle map;
   const int err = ::mdbx_dbi_open2(handle_, old_name, MDBX_DB_ACCEDE, &map.dbi);
   switch (err) {
@@ -5076,20 +4806,8 @@ __cold bool txn::rename_map(const ::mdbx::slice &old_name,
   }
 }
 
-__cold bool txn::rename_map(const ::std::string &old_name,
-                            const ::std::string &new_name,
-                            bool throw_if_absent) {
-  return rename_map(::mdbx::slice(old_name), ::mdbx::slice(new_name),
-                    throw_if_absent);
-}
-
-//------------------------------------------------------------------------------
-
-void cursor_managed::close() {
-  if (MDBX_UNLIKELY(!handle_))
-    MDBX_CXX20_UNLIKELY error::throw_exception(MDBX_EINVAL);
-  ::mdbx_cursor_close(handle_);
-  handle_ = nullptr;
+__cold bool txn::rename_map(const ::std::string &old_name, const ::std::string &new_name, bool throw_if_absent) {
+  return rename_map(::mdbx::slice(old_name), ::mdbx::slice(new_name), throw_if_absent);
 }
 
 //------------------------------------------------------------------------------
@@ -5120,12 +4838,10 @@ __cold ::std::ostream &operator<<(::std::ostream &out, const pair &it) {
 }
 
 __cold ::std::ostream &operator<<(::std::ostream &out, const pair_result &it) {
-  return out << "{" << (it.done ? "done: " : "non-done: ") << it.key << " => "
-             << it.value << "}";
+  return out << "{" << (it.done ? "done: " : "non-done: ") << it.key << " => " << it.value << "}";
 }
 
-__cold ::std::ostream &operator<<(::std::ostream &out,
-                                  const ::mdbx::env::geometry::size &it) {
+__cold ::std::ostream &operator<<(::std::ostream &out, const ::mdbx::env::geometry::size &it) {
   switch (it.bytes) {
   case ::mdbx::env::geometry::default_value:
     return out << "default";
@@ -5135,8 +4851,7 @@ __cold ::std::ostream &operator<<(::std::ostream &out,
     return out << "maximal";
   }
 
-  const auto bytes = (it.bytes < 0) ? out << "-",
-             size_t(-it.bytes)      : size_t(it.bytes);
+  const auto bytes = (it.bytes < 0) ? out << "-", size_t(-it.bytes) : size_t(it.bytes);
   struct {
     size_t one;
     const char *suffix;
@@ -5166,8 +4881,7 @@ __cold ::std::ostream &operator<<(::std::ostream &out,
   return out;
 }
 
-__cold ::std::ostream &operator<<(::std::ostream &out,
-                                  const env::geometry &it) {
+__cold ::std::ostream &operator<<(::std::ostream &out, const env::geometry &it) {
   return                                                                //
       out << "\tlower " << env::geometry::size(it.size_lower)           //
           << ",\n\tnow " << env::geometry::size(it.size_now)            //
@@ -5177,8 +4891,7 @@ __cold ::std::ostream &operator<<(::std::ostream &out,
           << ",\n\tpagesize " << env::geometry::size(it.pagesize) << "\n";
 }
 
-__cold ::std::ostream &operator<<(::std::ostream &out,
-                                  const env::operate_parameters &it) {
+__cold ::std::ostream &operator<<(::std::ostream &out, const env::operate_parameters &it) {
   return out << "{\n"                                 //
              << "\tmax_maps " << it.max_maps          //
              << ",\n\tmax_readers " << it.max_readers //
@@ -5202,8 +4915,7 @@ __cold ::std::ostream &operator<<(::std::ostream &out, const env::mode &it) {
   }
 }
 
-__cold ::std::ostream &operator<<(::std::ostream &out,
-                                  const env::durability &it) {
+__cold ::std::ostream &operator<<(::std::ostream &out, const env::durability &it) {
   switch (it) {
   case env::durability::robust_synchronous:
     return out << "robust_synchronous";
@@ -5218,16 +4930,14 @@ __cold ::std::ostream &operator<<(::std::ostream &out,
   }
 }
 
-__cold ::std::ostream &operator<<(::std::ostream &out,
-                                  const env::reclaiming_options &it) {
+__cold ::std::ostream &operator<<(::std::ostream &out, const env::reclaiming_options &it) {
   return out << "{"                                            //
              << "lifo: " << (it.lifo ? "yes" : "no")           //
              << ", coalesce: " << (it.coalesce ? "yes" : "no") //
              << "}";
 }
 
-__cold ::std::ostream &operator<<(::std::ostream &out,
-                                  const env::operate_options &it) {
+__cold ::std::ostream &operator<<(::std::ostream &out, const env::operate_options &it) {
   static const char comma[] = ", ";
   const char *delimiter = "";
   out << "{";
@@ -5256,8 +4966,7 @@ __cold ::std::ostream &operator<<(::std::ostream &out,
   return out << "}";
 }
 
-__cold ::std::ostream &operator<<(::std::ostream &out,
-                                  const env_managed::create_parameters &it) {
+__cold ::std::ostream &operator<<(::std::ostream &out, const env_managed::create_parameters &it) {
   return out << "{\n"                                                        //
              << "\tfile_mode " << std::oct << it.file_mode_bits << std::dec  //
              << ",\n\tsubdirectory " << (it.use_subdirectory ? "yes" : "no") //
@@ -5265,8 +4974,7 @@ __cold ::std::ostream &operator<<(::std::ostream &out,
              << it.geometry << "}";
 }
 
-__cold ::std::ostream &operator<<(::std::ostream &out,
-                                  const MDBX_log_level_t &it) {
+__cold ::std::ostream &operator<<(::std::ostream &out, const MDBX_log_level_t &it) {
   switch (it) {
   case MDBX_LOG_FATAL:
     return out << "LOG_FATAL";
@@ -5291,8 +4999,7 @@ __cold ::std::ostream &operator<<(::std::ostream &out,
   }
 }
 
-__cold ::std::ostream &operator<<(::std::ostream &out,
-                                  const MDBX_debug_flags_t &it) {
+__cold ::std::ostream &operator<<(::std::ostream &out, const MDBX_debug_flags_t &it) {
   if (it == MDBX_DBG_DONTCHANGE)
     return out << "DBG_DONTCHANGE";
 
@@ -5328,8 +5035,7 @@ __cold ::std::ostream &operator<<(::std::ostream &out,
   return out << "}";
 }
 
-__cold ::std::ostream &operator<<(::std::ostream &out,
-                                  const ::mdbx::error &err) {
+__cold ::std::ostream &operator<<(::std::ostream &out, const ::mdbx::error &err) {
   return out << err.what() << " (" << long(err.code()) << ")";
 }
 

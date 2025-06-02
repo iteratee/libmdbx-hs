@@ -371,6 +371,12 @@ data MdbxCursorOp
   | MdbxSetRange
   | MdbxPrevMultiple
   | MdbxSetLowerbound
+  | MdbxSetUpperbound
+  | MdbxToKeyLesserThan
+  | MdbxToKeyLesserOrEqual
+  | MdbxToKeyEqual
+  | MdbxToKeyGreaterOrEqual
+  | MdbxToKeyGreaterThan
   deriving (Show, Eq, Ord)
 
 --{# enum MDBX_cursor_op as MdbxCursorOp {underscoreToCase} deriving (Show, Eq, Ord) #}

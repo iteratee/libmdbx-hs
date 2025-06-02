@@ -40,6 +40,8 @@ library:
   include-dirs: cbits/libmdbx
   install-includes:
     - cbits/libmdbx/mdbx.h
+  cpp-options:
+    - "\"-DMDBX_BUILD_FLAGS='\\\"Built With GHC\\\"'\""
   c-sources:
     - cbits/libmdbx/mdbx.c
   build-tools: c2hs
